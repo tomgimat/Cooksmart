@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.search.SearchFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Barre de recherche -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_recipe_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Filtres sous forme de chips -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:singleSelection="false">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegetarian"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:text="Végétarien" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegan"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:text="Vegan" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipGlutenFree"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:text="Sans gluten" />
+            <!-- Ajoute d'autres chips pour Lactose Free, Low Salt... -->
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Filtres avancés (slider durée, nombre d’ingrédients) -->
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sliderPrepTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:stepSize="5"
+            android:value="45"
+            android:valueFrom="5"
+            android:valueTo="180" />
+
+        <TextView
+            android:id="@+id/textPrepTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temps max: 45 min" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sliderIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:stepSize="1"
+            android:value="8"
+            android:valueFrom="1"
+            android:valueTo="20" />
+
+        <TextView
+            android:id="@+id/textNbIngredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max ingrédients: 8" />
+
+        <!-- Résultats de recherche -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSearchResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

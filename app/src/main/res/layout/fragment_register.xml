@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:theme="@style/Theme.Cooksmart">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/title_register"
+        android:textColor="@color/colorTertiaryPurple"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/email"
+        android:textColor="@color/colorTextViewField" />
+
+    <EditText
+        android:id="@+id/emailField"
+        android:hint="@string/email"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/title_password_hint"
+        android:textColor="@color/colorTextViewField" />
+
+    <EditText
+        android:id="@+id/passwordField"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title_password_hint"
+        android:inputType="textPassword" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/pseudo_field"
+        android:textColor="@color/colorTextViewField" />
+
+    <EditText
+        android:id="@+id/pseudoField"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/pseudo_field"
+        android:inputType="textPersonName" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/date_of_birth_field"
+        android:textColor="@color/colorTextViewField" />
+
+    <EditText
+        android:id="@+id/dobField"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/date_of_birth_field"
+        android:ems="10"
+        android:inputType="date" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/registerButton"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_register"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/colorButton"
+        app:cornerRadius="8dp"/>
+
+    <TextView
+        android:id="@+id/backToLoginLink"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/already_have_an_account"
+        android:textColor="@color/colorBlueBase" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonCancelRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:backgroundTint="@color/colorTextViewField" />
+</LinearLayout>

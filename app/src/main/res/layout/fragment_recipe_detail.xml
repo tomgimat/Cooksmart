@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.recipe.RecipeDetailFragment"
+    android:paddingBottom="72dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Titre et étoiles -->
+        <TextView
+            android:id="@+id/textRecipeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:text=""
+            android:textColor="@color/colorTextViewField"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- RatingBar -->
+        <RatingBar
+            android:id="@+id/ratingBarRecipe"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:numStars="5"
+            android:stepSize="1.0"
+            app:layout_constraintEnd_toEndOf="@+id/textRecipeTitle"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textRecipeTitle" />
+
+        <TextView
+            android:id="@+id/textNbRatings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="17 notes"
+            android:textColor="@color/textSecondary"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@+id/ratingBarRecipe"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/ratingBarRecipe"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBarRecipe" />
+
+        <!-- Durée / bouton pas-à-pas -->
+        <TextView
+            android:id="@+id/textRecipeDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Temps estimé : 45mn"
+            android:textColor="@color/textSecondary"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textNbRatings" />
+
+        <Button
+            android:id="@+id/btnStepByStep"
+            style="@style/Widget.Cooksmart.StepButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/start_step_by_step_recipe"
+            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textRecipeDuration" />
+
+
+        <!-- Ingrédients -->
+        <TextView
+            android:id="@+id/textIngredientsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="40dp"
+            android:text="Ingrédients"
+            android:textColor="@color/textAccent"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnStepByStep" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvIngredients"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textIngredientsLabel" />
+
+
+        <!-- Section description -->
+        <TextView
+            android:id="@+id/textRecipeInfoLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/informations_sur_la_recette"
+            android:textColor="@color/textAccent"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvIngredients" />
+
+        <TextView
+            android:id="@+id/textRecipeDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:textColor="@color/textPrimary"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textRecipeInfoLabel"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

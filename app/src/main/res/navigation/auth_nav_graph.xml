@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="fr.tomgimat.cooksmart.auth.LoginFragment"
+        android:label="@string/title_login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="fr.tomgimat.cooksmart.auth.RegisterFragment"
+        android:label="@string/title_register">
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/registerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

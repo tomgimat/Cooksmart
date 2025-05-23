@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Cooksmart</string>
+    <string name="title_home">Accueil</string>
+    <string name="title_search">Recherche</string>
+    <string name="title_my_space">Mon espace</string>
+    <string name="title_login">Connexion</string>
+    <string name="title_register">Créer un compte</string>
+    <string name="title_forgot_password">Mot de passe oublié</string>
+    <string name="title_password_hint">Mot de passe</string>
+    <string name="email">Email</string>
+    <string name="please_enter_email_and_password">Veuillez entrer un email et un mot de passe</string>
+    <string name="password_must_be_at_least_6_characters">Le mot de passe doit faire au moins 6 caractères</string>
+    <string name="authentication_failed">La connexion a échoué.</string>
+    <string name="authentication_success">Connexion réussie</string>
+    <string name="profile">profil</string>
+    <string name="already_have_an_account">Déjà un compte ? Connexion</string>
+    <string name="date_of_birth_field">Date de naissance (jj/mm/aaaa)</string>
+    <string name="pseudo_field">Pseudo</string>
+    <string name="you_don_t_have_an_account">Vous n\'avez pas encore de compte ? Inscription</string>
+    <string name="cancel">Annuler</string>
+    <string name="cancel_register_toast">Inscription annulée</string>
+    <string name="cancel_login_toast">Connexion annulée</string>
+    <string name="please_fill_all_fields">Veuillez remplir tous les champs</string>
+    <string name="prefs_saved">Préférences sauvegardées</string>
+    <string name="vegetarian">Végétarien</string>
+    <string name="gluten_free">Sans Gluten</string>
+    <string name="lactose_free">Sans Lactose</string>
+    <string name="validate_prefs">Valider les préférences</string>
+    <string name="change_avatar">Changer l’avatar</string>
+    <string name="food_preferences">Préférences alimentaires :</string>
+    <string name="logout">Déconnexion</string>
+    <string name="meal_image">Meal Image</string>
+    <string name="suggestions_for_you">Suggestions pour vous</string>
+    <string name="welcome_to_cooksmart">Welcome to CookSmart !</string>
+    <string name="random_meals">Random Meals...</string>
+    <string name="vegan">Vegan</string>
+    <string name="low_sugar">Low Sugar</string>
+    <string name="pescetarian">Pescetarian</string>
+    <string name="start_step_by_step_recipe">Démarrer la recette pas-à-pas</string>
+    <string name="informations_sur_la_recette">Informations sur la recette</string>
+    <string name="search_recipe_hint">Cherchez une recette...</string>
+
+</resources>

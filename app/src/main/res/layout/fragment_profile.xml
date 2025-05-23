@@ -1,0 +1,160 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 1. Infos Utilisateur -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/ProfileCard"
+            app:cardBackgroundColor="@color/cardInfoBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+                <!-- Avatar et bouton Edit -->
+                <ImageView
+                    android:id="@+id/avatarView"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_launcher_foreground" />
+
+                <TextView
+                    android:id="@+id/usernameView"
+                    style="@style/ProfileSectionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/emailView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/dobView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:text="" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 2. Préférences Alimentaires -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="16dp"
+            style="@style/ProfileCard"
+            app:cardBackgroundColor="@color/cardPrefsBackground">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ProfileSectionPrefTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/food_preferences" />
+
+                <CheckBox
+                    android:id="@+id/cbVegetarian"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/vegetarian" />
+
+                <CheckBox
+                    android:id="@+id/cbLowSalt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Peu salé" />
+
+                <CheckBox
+                    android:id="@+id/cbGlutenFree"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/gluten_free" />
+
+                <CheckBox
+                    android:id="@+id/cbLactoseFree"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/lactose_free" />
+
+                <CheckBox
+                    android:id="@+id/cbVegan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/vegan" />
+
+                <CheckBox
+                    android:id="@+id/cbLowSugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/low_sugar" />
+
+                <CheckBox
+                    android:id="@+id/cbPescetarian"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/pescetarian" />
+
+
+                <Button
+                    android:id="@+id/btnSavePrefs"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:text="@string/validate_prefs" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 3. Actions Supplémentaires -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/ProfileCard"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/cardAvatarBackground">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <Button
+                    android:id="@+id/btnChangeAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:text="@string/change_avatar" />
+                <!-- plus tard : galerie ou upload -->
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            style="@style/Widget.Cooksmart.PrimaryButton"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            app:backgroundTint="@color/design_default_color_error"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+</ScrollView>

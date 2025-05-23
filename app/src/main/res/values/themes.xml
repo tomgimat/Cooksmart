@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Cooksmart" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <!-- Couleurs secondaires -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorSecondary</item>  <!-- Ou une autre couleur contrastante -->
+
+        <!-- Fond d'écran -->
+        <item name="android:colorBackground">@color/colorBackground</item>
+
+        <item name="android:button">@color/colorButton</item>
+
+        <!-- Style de la Bottom Navigation -->
+        <item name="bottomNavigationStyle">@style/Widget.CookSmart.BottomNavigationView</item>
+    </style>
+
+    <!-- Widget theme for bottom navbar. -->
+    <style name="Widget.CookSmart.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@color/bottomNavColor</item>
+        <item name="itemTextColor">@color/bottom_nav_color_selector</item>
+        <item name="itemIconTint">@color/bottom_nav_color_selector</item>
+    </style>
+</resources>

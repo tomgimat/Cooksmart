@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Couleurs principales -->
+    <color name="colorPrimary">#E6C492</color>             <!-- Fond de l'app -->
+    <color name="colorBackground">#FFF8ED</color>             <!-- Fond de l'app -->
+    <color name="colorPrimaryVariant">#E6E6FA</color>
+    <color name="colorPrimaryContrast">#B9A789</color>
+    <color name="colorOnPrimary">#D9D0FF</color>
+
+    <!-- Couleurs secondaires -->
+    <color name="colorSecondary">#FFECB3</color>
+    <color name="colorSecondaryVariant">#FFCCBC</color>
+    <color name="colorSecondaryVariant2">#B2654C</color>
+    <color name="colorSecondaryVariant3">#D99681</color>
+
+
+    <color name="colorAccent">#C8E6C9</color>
+    <color name="colorAccentLow">#5A7971</color>
+    <color name="colorAccentGrey">#9BA7A4</color>
+    <color name="colorAccentGrey2">#7A8F89</color>
+
+
+    <color name="colorBlueBase">#7A93A2</color>
+    <color name="colorBlueLow">#345A71</color>
+    <color name="colorBlueLight">#55778A</color>
+    <color name="colorBlueLighter">#ADBEC8</color>
+
+
+    <!-- Couleur tertiaire -->
+    <color name="colorTertiaryPurple">#676481</color>
+
+    <color name="colorButton">#E6C492</color>
+    <color name="colorTextViewField">#868498</color>
+
+    <!-- Navbar Bottom -->
+    <color name="bottomNavColor">#FFE4BA</color>
+    <color name="bottomNavTextColorActive">#D39A41</color>
+    <color name="bottomNavTextColorInactive">#99000000</color>
+
+    <!-- Profile Section-->
+    <color name="cardInfoBackground">#FFF0E1</color>
+    <color name="cardPrefsBackground">#D1C4E9</color>
+    <color name="cardAvatarBackground">#FFF8ED</color>
+
+    <!-- Texte -->
+    <color name="textPrimary">#2D2B27</color>
+    <color name="textSecondary">#7D766B</color>
+    <color name="textAccent">#755BE6</color>
+    <color name="textDanger">#D45D5D</color>
+
+    <!-- Cartes, surfaces -->
+    <color name="cardInfoBg">#FFE4BA</color>
+    <color name="cardPrefsBg">#D9D0FF</color>
+    <color name="cardStepBg">#C8E6C9</color>
+    <color name="cardIngredientsBg">#FFECB3</color>
+    <color name="cardStepAccent">#FFCCBC</color>
+
+    <!-- Pour les étoiles (rating) -->
+    <color name="starYellow">#FFD700</color>
+    <color name="starGray">#E0E0E0</color>
+
+    <!-- Pour overlay texte sur images -->
+    <color name="textOverlay">#80000000</color> <!-- Noir à 50% -->
+
+</resources>
