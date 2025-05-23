@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.databinding.FragmentRecipeDetailBinding;
 
@@ -33,6 +34,10 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Overlay de loading en attendant le chargement de la page
+        showLoadingOverlay(true);
+
         ingredientAdapter = new IngredientAdapter(new ArrayList<>());
         binding.rvIngredients.setAdapter(ingredientAdapter);
         binding.rvIngredients.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -45,18 +50,23 @@ public class RecipeDetailFragment extends Fragment {
 
         RecipeDetailViewModel viewModel = new ViewModelProvider(this).get(RecipeDetailViewModel.class);
 
+
+        //Appelle le viewmodel pour charger la recette
+        viewModel.loadRecipe(firestoreId, mealId);
+
         //Observe la recette en mettant à jour les données affichées
         viewModel.getRecipe().observe(getViewLifecycleOwner(), recipe -> {
             if (recipe == null){
                 return;
             }
-            binding.textRecipeTitle.setText(recipe.name);
-            binding.textRecipeDescription.setText(recipe.instructions);
             displayRecipe(recipe);
+            //On affiche la page et l'overlay disparait
+            showLoadingOverlay(false);
         });
 
-        //Appelle le viewmodel pour charger la recette
-        viewModel.loadRecipe(firestoreId, mealId);
+
+
+
 
     }
 
@@ -64,8 +74,21 @@ public class RecipeDetailFragment extends Fragment {
      * Affichage des données de la recette
      */
     private void displayRecipe(FirestoreRecipe recipe) {
+        //Animation fadeIn en chargeant les éléments de la page
+        View contentView = binding.getRoot();
+        contentView.setAlpha(0f);
+        contentView.setVisibility(View.VISIBLE);
+        contentView.animate().alpha(1f).setDuration(250).start();
+
         binding.textRecipeTitle.setText(recipe.name);
         binding.textRecipeDescription.setText(recipe.instructions);
+
+        if (recipe.duration != null && recipe.duration > 0) {
+            binding.textRecipeDuration.setText(getString(R.string.estimated_time, recipe.duration));
+        } else {
+            binding.textRecipeDuration.setText(getString(R.string.unknown_duration));
+        }
+
         //ingrédients
         List<String> displayIngredients = new ArrayList<>();
         for (int i = 0; i < recipe.ingredients.size(); i++) {
@@ -77,6 +100,20 @@ public class RecipeDetailFragment extends Fragment {
     }
 
 
+    private void showLoadingOverlay(boolean show) {
+        binding.loadingOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        int contentVisibility = show ? View.GONE : View.VISIBLE;
+        binding.textRecipeTitle.setVisibility(contentVisibility);
+        binding.ratingBarRecipe.setVisibility(contentVisibility);
+        binding.textNbRatings.setVisibility(contentVisibility);
+        binding.textRecipeDuration.setVisibility(contentVisibility);
+        binding.btnStepByStep.setVisibility(contentVisibility);
+        binding.textIngredientsLabel.setVisibility(contentVisibility);
+        binding.rvIngredients.setVisibility(contentVisibility);
+        binding.textRecipeInfoLabel.setVisibility(contentVisibility);
+        binding.textRecipeDescription.setVisibility(contentVisibility);
+    }
 
 
 

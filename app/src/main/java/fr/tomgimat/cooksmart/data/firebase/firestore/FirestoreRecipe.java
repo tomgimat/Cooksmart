@@ -14,6 +14,8 @@ public class FirestoreRecipe implements RecipeDisplayable {
     public String imageUrl;
     public String youtubeVideoUrl;
 
+    public Integer duration;
+
     public boolean isVegetarian;
     public boolean isVegan;
     public boolean isGlutenFree;
@@ -42,6 +44,7 @@ public class FirestoreRecipe implements RecipeDisplayable {
         recipe.instructions = doc.getString("instructions");
         recipe.imageUrl = doc.getString("imageUrl");
         recipe.youtubeVideoUrl = doc.getString("youtubeVideoUrl");
+        recipe.duration = doc.getLong("duration") != null ? doc.getLong("duration").intValue() : null;
         recipe.isVegetarian = doc.getBoolean("isVegetarian") != null && doc.getBoolean("isVegetarian");
         recipe.isVegan = doc.getBoolean("isVegan") != null && doc.getBoolean("isVegan");
         recipe.isGlutenFree = doc.getBoolean("isGlutenFree") != null && doc.getBoolean("isGlutenFree");

@@ -40,4 +40,8 @@
     <string name="start_step_by_step_recipe">Start Step-by-step</string>
     <string name="informations_sur_la_recette">Informations sur la recette</string>
     <string name="search_recipe_hint">Cherchez une recette...</string>
+    <string name="estimated_time">Temps estimé : %1$d min</string>
+    <string name="unknown_duration">Unknown time</string>
+
+
 </resources>
