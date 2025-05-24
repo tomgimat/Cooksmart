@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("recipe_id", recipe.id);
             Navigation.findNavController(binding.getRoot()).navigate(R.id.fragment_meal_detail, bundle);
-        });
+        }, R.layout.item_meal_image);
         binding.rvMeals.setAdapter(customRecipeAdapter);
         binding.rvMeals.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("meal_id", randomMeal.id);
             Navigation.findNavController(binding.getRoot()).navigate(R.id.fragment_meal_detail, bundle);
-        });
+        }, R.layout.item_meal_image);
         binding.rvRandomMeals.setAdapter(randomMealAdapter);
         binding.rvRandomMeals.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 

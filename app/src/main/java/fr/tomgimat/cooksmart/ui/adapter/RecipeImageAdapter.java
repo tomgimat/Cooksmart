@@ -28,10 +28,12 @@ public class RecipeImageAdapter<T extends RecipeDisplayable>
 
     private List<T> recipes = new ArrayList<>();
     private OnRecipeClickListener<T> listener;
+    private int layoutResId;
 
-    public RecipeImageAdapter(List<T> recipes, OnRecipeClickListener<T> listener) {
+    public RecipeImageAdapter(List<T> recipes, OnRecipeClickListener<T> listener, int layoutResId) {
         this.recipes = recipes;
         this.listener = listener;
+        this.layoutResId = layoutResId;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -44,7 +46,7 @@ public class RecipeImageAdapter<T extends RecipeDisplayable>
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_meal_image, parent, false);
+                .inflate(layoutResId, parent, false);
         return new ViewHolder(v);
     }
 

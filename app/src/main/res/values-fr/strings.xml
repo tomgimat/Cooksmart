@@ -41,6 +41,8 @@
     <string name="search_recipe_hint">Cherchez une recette...</string>
     <string name="estimated_time">Temps estimé : %1$d min</string>
     <string name="unknown_duration">Durée inconnue</string>
+    <string name="filter_duration">Temps max: %1$d min</string>
+    <string name="filter_ingredients">Max ingrédients: %1$d</string>
 
 
 </resources>

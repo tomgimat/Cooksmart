@@ -1,6 +1,9 @@
 package fr.tomgimat.cooksmart.ui.search;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,63 +19,68 @@ import java.util.Set;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 
 public class SearchViewModel extends ViewModel {
+
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>("");
-    private final MutableLiveData<Set<String>> dietFilters = new MutableLiveData<>(new HashSet<>());
-    private final MutableLiveData<Integer> maxPrepTime = new MutableLiveData<>(null); // null = pas de filtre
-    private final MutableLiveData<Integer> maxIngredients = new MutableLiveData<>(null);
-    private final MutableLiveData<List<FirestoreRecipe>> searchResults = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Filters> filters = new MutableLiveData<>(new Filters());
+    private final MutableLiveData<List<FirestoreRecipe>> allRecipes = new MutableLiveData<>(new ArrayList<>());
+    private final MediatorLiveData<List<FirestoreRecipe>> filteredRecipes = new MediatorLiveData<>();
 
-    public LiveData<List<FirestoreRecipe>> getSearchResults() { return searchResults; }
-
-    // Appelé quand la query ou les filtres changent (dans le fragment)
-    public void updateSearch(String query, Set<String> diet, Integer prepTime, Integer nbIngredients) {
-        searchQuery.setValue(query);
-        dietFilters.setValue(diet);
-        maxPrepTime.setValue(prepTime);
-        maxIngredients.setValue(nbIngredients);
-        fetchRecipes();
+    public SearchViewModel() {
+        filteredRecipes.addSource(allRecipes, r -> refreshResults());
+        filteredRecipes.addSource(searchQuery, s -> refreshResults());
+        filteredRecipes.addSource(filters, f -> refreshResults());
+        //Charge toutes les recettes en cache pour alléger les requêtes ensuite
+        fetchAllRecipes();
     }
 
-    // Exécuté dès qu’un filtre ou la query change
-    private void fetchRecipes() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference recipesRef = db.collection("recipes");
+    private void fetchAllRecipes() {
+        FirebaseFirestore.getInstance().collection("recipes")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<FirestoreRecipe> list = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        list.add(FirestoreRecipe.fromFirestoreDoc(doc));
+                    }
+                    allRecipes.setValue(list);
+                });
+    }
 
-        // Pour la démo, tu peux d’abord charger tout et filtrer côté client si la logique de requête combinée est trop complexe
-        recipesRef.get().addOnSuccessListener(snapshot -> {
-            List<FirestoreRecipe> filtered = new ArrayList<>();
-            String recipeQuery = searchQuery.getValue() != null ? searchQuery.getValue().toLowerCase() : "";
-            Set<String> diet = dietFilters.getValue() != null ? dietFilters.getValue() : new HashSet<>();
-            Integer time = maxPrepTime.getValue();
-            Integer nbIng = maxIngredients.getValue();
+    private void refreshResults() {
+        List<FirestoreRecipe> all = allRecipes.getValue() != null ? allRecipes.getValue() : new ArrayList<>();
+        String query = searchQuery.getValue() != null ? searchQuery.getValue().toLowerCase() : "";
+        Filters f = filters.getValue() != null ? filters.getValue() : new Filters();
 
-            for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                FirestoreRecipe recipe = FirestoreRecipe.fromFirestoreDoc(doc);
+        List<FirestoreRecipe> filtered = new ArrayList<>();
+        for (FirestoreRecipe recipe : all) {
+            boolean matches = recipe.name.toLowerCase().contains(query) ||
+                    recipe.ingredients.stream().anyMatch(i -> i.toLowerCase().contains(query));
 
-                // 1. Filtre par texte (nom ou ingrédient)
-                boolean matches = recipeQuery.isEmpty()
-                        || recipe.name.toLowerCase().contains(recipeQuery)
-                        || recipe.ingredients.stream().anyMatch(i -> i.toLowerCase().contains(recipeQuery));
+            boolean dietOk = (f.vegetarian == null || recipe.isVegetarian == f.vegetarian)
+                    && (f.vegan == null || recipe.isVegan == f.vegan)
+                    && (f.glutenFree == null || recipe.isGlutenFree == f.glutenFree)
+                    && (f.lactoseFree == null || recipe.isLactoseFree == f.lactoseFree);
 
-                // 2. Filtres diététiques (végétarien, vegan...)
-                boolean dietOk = true;
-                if (diet.contains("Vegetarian") && !recipe.isVegetarian) dietOk = false;
-                if (diet.contains("Vegan") && !recipe.isVegan) dietOk = false;
-                if (diet.contains("GlutenFree") && !recipe.isGlutenFree) dietOk = false;
-                if (diet.contains("LactoseFree") && !recipe.isLactoseFree) dietOk = false;
-                // ... rajoute les autres au besoin
+            boolean durationOk = f.maxDuration == null || (recipe.duration != null && recipe.duration <= f.maxDuration);
+            boolean ingOk = f.maxIngredients == null || (recipe.ingredients != null && recipe.ingredients.size() <= f.maxIngredients);
 
-                // 3. Durée max
-                boolean timeOk = time == null || (recipe.duration != null && recipe.duration <= time);
-
-                // 4. Nb ingrédients max
-                boolean ingOk = nbIng == null || (recipe.ingredients != null && recipe.ingredients.size() <= nbIng);
-
-                if (matches && dietOk && timeOk && ingOk) {
-                    filtered.add(recipe);
-                }
+            if (matches && dietOk && durationOk && ingOk) {
+                filtered.add(recipe);
             }
-            searchResults.setValue(filtered);
-        });
+        }
+        filteredRecipes.setValue(filtered);
+        Log.d("SearchViewModel", "Nb recettes trouvées : " + filtered.size());
+
+    }
+
+    public void setSearchQuery(String query) { searchQuery.setValue(query); }
+    public void setFilters(Filters f) { filters.setValue(f); }
+    public Filters getFilters() { return filters.getValue(); }
+
+    public LiveData<List<FirestoreRecipe>> getFilteredRecipes() { return filteredRecipes; }
+
+    public LiveData<List<FirestoreRecipe>> getAllRecipes() {
+        return allRecipes;
     }
 }
+
+
