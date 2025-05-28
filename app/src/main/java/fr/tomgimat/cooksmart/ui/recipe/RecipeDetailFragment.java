@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,7 @@ import java.util.List;
 import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.databinding.FragmentRecipeDetailBinding;
+import fr.tomgimat.cooksmart.ui.profile.ProfileFragment;
 
 /**
  * Gère les détails d'une recette
@@ -24,10 +27,31 @@ import fr.tomgimat.cooksmart.databinding.FragmentRecipeDetailBinding;
 public class RecipeDetailFragment extends Fragment {
     private FragmentRecipeDetailBinding binding;
     private IngredientAdapter ingredientAdapter;
+    private String recipeId;
+    private ImageButton bookmarkButton;
+    private boolean isSaved = false;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            recipeId = getArguments().getString("recipe_id");
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRecipeDetailBinding.inflate(inflater, container, false);
+        
+        // Initialisation du bouton d'enregistrement
+        bookmarkButton = binding.bookmarkButton;
+        setupBookmarkButton();
+        
+        ingredientAdapter = new IngredientAdapter(new ArrayList<>());
+        binding.rvIngredients.setAdapter(ingredientAdapter);
+        binding.rvIngredients.setLayoutManager(new LinearLayoutManager(getContext()));
+
         return binding.getRoot();
     }
 
@@ -38,21 +62,13 @@ public class RecipeDetailFragment extends Fragment {
         //Overlay de loading en attendant le chargement de la page
         showLoadingOverlay(true);
 
-        ingredientAdapter = new IngredientAdapter(new ArrayList<>());
-        binding.rvIngredients.setAdapter(ingredientAdapter);
-        binding.rvIngredients.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
         Bundle args = getArguments();
-        String firestoreId = args != null ? args.getString("recipe_id") : null;
         String mealId = args != null ? args.getString("meal_id") : null;
-
 
         RecipeDetailViewModel viewModel = new ViewModelProvider(this).get(RecipeDetailViewModel.class);
 
-
         //Appelle le viewmodel pour charger la recette
-        viewModel.loadRecipe(firestoreId, mealId);
+        viewModel.loadRecipe(recipeId, mealId);
 
         //Observe la recette en mettant à jour les données affichées
         viewModel.getRecipe().observe(getViewLifecycleOwner(), recipe -> {
@@ -63,11 +79,6 @@ public class RecipeDetailFragment extends Fragment {
             //On affiche la page et l'overlay disparait
             showLoadingOverlay(false);
         });
-
-
-
-
-
     }
 
     /**
@@ -99,6 +110,30 @@ public class RecipeDetailFragment extends Fragment {
         ingredientAdapter.setIngredients(displayIngredients);
     }
 
+    private void setupBookmarkButton() {
+        // Vérifier si la recette est déjà sauvegardée
+        ProfileFragment.isRecipeSaved(recipeId, isSaved -> {
+            this.isSaved = isSaved;
+            updateBookmarkButtonState();
+        });
+
+        // Gérer le clic sur le bouton
+        bookmarkButton.setOnClickListener(v -> {
+            if (isSaved) {
+                ProfileFragment.removeRecipe(recipeId);
+                Toast.makeText(getContext(), "Recette retirée des favoris", Toast.LENGTH_SHORT).show();
+            } else {
+                ProfileFragment.saveRecipe(recipeId);
+                Toast.makeText(getContext(), "Recette ajoutée aux favoris", Toast.LENGTH_SHORT).show();
+            }
+            isSaved = !isSaved;
+            updateBookmarkButtonState();
+        });
+    }
+
+    private void updateBookmarkButtonState() {
+        bookmarkButton.setImageResource(isSaved ? R.drawable.bookmark_fill_24px : R.drawable.bookmark_24px);
+    }
 
     private void showLoadingOverlay(boolean show) {
         binding.loadingOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -114,8 +149,6 @@ public class RecipeDetailFragment extends Fragment {
         binding.textRecipeInfoLabel.setVisibility(contentVisibility);
         binding.textRecipeDescription.setVisibility(contentVisibility);
     }
-
-
 
     /** Simple callback pour asynchro
      * Ce callback prend une FirestoreRecipe */

@@ -69,7 +69,6 @@ public class SearchViewModel extends ViewModel {
         }
         filteredRecipes.setValue(filtered);
         Log.d("SearchViewModel", "Nb recettes trouvées : " + filtered.size());
-
     }
 
     public void setSearchQuery(String query) { searchQuery.setValue(query); }
