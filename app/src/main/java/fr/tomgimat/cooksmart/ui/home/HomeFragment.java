@@ -1,6 +1,7 @@
 package fr.tomgimat.cooksmart.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import java.util.List;
 
 import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
+import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreVideo;
 import fr.tomgimat.cooksmart.data.mealdb.Meal;
 import fr.tomgimat.cooksmart.databinding.FragmentHomeBinding;
 import fr.tomgimat.cooksmart.ui.adapter.RecipeImageAdapter;
+import fr.tomgimat.cooksmart.ui.adapter.VideoAdapter;
 
 public class HomeFragment extends Fragment {
 
@@ -30,6 +33,8 @@ public class HomeFragment extends Fragment {
     private RecipeImageAdapter<Meal> randomMealAdapter;
     private List<Meal> randomMeals = new ArrayList<>();
     private List<FirestoreRecipe> customMeals = new ArrayList<>();
+    private VideoAdapter videoAdapter;
+    private List<FirestoreVideo> videos = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,9 +77,19 @@ public class HomeFragment extends Fragment {
             randomMealAdapter.setRecipes(meals);
         });
 
+        // Video Adapter
+        videoAdapter = new VideoAdapter(requireContext(), videos);
+        binding.rvVideos.setAdapter(videoAdapter);
+        binding.rvVideos.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        homeViewModel.getVideos().observe(getViewLifecycleOwner(), videoList -> {
+            videoAdapter.setVideos(videoList);
+            Log.d("VideoAdapter", "Videos received: " + videoList.size());
+        });
 
         homeViewModel.loadSuggestionsForCurrentUser();
         homeViewModel.fetchRandomMealsIfNeeded();
+        homeViewModel.loadVideos();
 
 
         /*

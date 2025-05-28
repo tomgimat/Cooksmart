@@ -211,28 +211,23 @@ public class ProfileFragment extends Fragment {
     private void loadSavedRecipes() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d("ProfileFragment", "Chargement des recettes sauvegardées pour l'utilisateur: " + uid);
 
         db.collection("saved_recipes").document(uid)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
-                        Log.d("ProfileFragment", "Recettes trouvées: " + (recipeIds != null ? recipeIds.size() : 0));
                         if (recipeIds != null && !recipeIds.isEmpty()) {
-                            Log.d("ProfileFragment", "IDs des recettes: " + recipeIds);
                             loadRecipeDetails(recipeIds);
                         } else {
                             Log.d("ProfileFragment", "Aucune recette sauvegardée");
                             savedRecipesAdapter.setRecipes(new ArrayList<>());
                         }
                     } else {
-                        Log.d("ProfileFragment", "Document saved_recipes n'existe pas");
                         savedRecipesAdapter.setRecipes(new ArrayList<>());
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("ProfileFragment", "Erreur lors du chargement des recettes sauvegardées", e);
                     Toast.makeText(getContext(), "Erreur lors du chargement des recettes sauvegardées", Toast.LENGTH_SHORT).show();
                     savedRecipesAdapter.setRecipes(new ArrayList<>());
                 });
@@ -252,7 +247,6 @@ public class ProfileFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-        Log.d("ProfileFragment", "Début du chargement des détails pour " + recipeIds.size() + " recettes");
 
         for (String recipeId : recipeIds) {
             tasks.add(db.collection("recipes").document(recipeId).get());
@@ -261,14 +255,12 @@ public class ProfileFragment extends Fragment {
         Tasks.whenAll(tasks)
             .addOnSuccessListener(aVoid -> {
                 List<FirestoreRecipe> recipes = new ArrayList<>();
-                Log.d("ProfileFragment", "Toutes les tâches terminées, traitement des résultats");
                 
                 for (Task<DocumentSnapshot> task : tasks) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc != null && doc.exists()) {
                         FirestoreRecipe recipe = FirestoreRecipe.fromFirestoreDoc(doc);
                         recipes.add(recipe);
-                        Log.d("ProfileFragment", "Recette chargée: " + recipe.name + " (ID: " + recipe.id + ")");
                     } else {
                         Log.w("ProfileFragment", "Document non trouvé ou null");
                     }
@@ -290,12 +282,10 @@ public class ProfileFragment extends Fragment {
 
         public SavedRecipesAdapter(List<FirestoreRecipe> recipes) {
             this.recipes = recipes;
-            Log.d("ProfileFragment", "Adapter créé avec " + recipes.size() + " recettes");
         }
 
         @SuppressLint("NotifyDataSetChanged")
         public void setRecipes(List<FirestoreRecipe> recipes) {
-            Log.d("ProfileFragment", "Mise à jour de l'adaptateur avec " + recipes.size() + " recettes");
             this.recipes = recipes;
             notifyDataSetChanged();
         }
@@ -311,7 +301,6 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             FirestoreRecipe recipe = recipes.get(position);
-            Log.d("ProfileFragment", "Affichage de la recette: " + recipe.name + " à la position " + position);
             
             holder.recipeTitle.setText(recipe.name);
             holder.recipeDescription.setText(recipe.area + " • " + recipe.category + " • " +
@@ -330,16 +319,15 @@ public class ProfileFragment extends Fragment {
             }
 
             holder.itemView.setOnClickListener(v -> {
-                Log.d("ProfileFragment", "Clic sur la recette: " + recipe.name);
                 Bundle args = new Bundle();
                 args.putString("recipe_id", recipe.id);
-                Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_recipeDetailFragment, args);
+                Navigation.findNavController(v)
+                    .navigate(R.id.action_profileFragment_to_recipeDetailFragment, args);
             });
         }
 
         @Override
         public int getItemCount() {
-            Log.d("ProfileFragment", "getItemCount appelé: " + recipes.size() + " items");
             return recipes.size();
         }
 

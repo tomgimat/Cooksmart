@@ -19,6 +19,7 @@ import java.util.Map;
 
 import fr.tomgimat.cooksmart.data.MealDbClient;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
+import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreVideo;
 import fr.tomgimat.cooksmart.data.mealdb.Meal;
 import fr.tomgimat.cooksmart.data.mealdb.MealDbApiResponse;
 import retrofit2.Call;
@@ -31,6 +32,7 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Meal>> randomMeals = new MutableLiveData<>();
     // Suggestions list
     private MutableLiveData<List<FirestoreRecipe>> suggestedRecipes = new MutableLiveData<>();
+    private final MutableLiveData<List<FirestoreVideo>> videos = new MutableLiveData<>(new ArrayList<>());
 
     public LiveData<List<Meal>> getRandomMeals() {
         return randomMeals;
@@ -38,6 +40,10 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<List<FirestoreRecipe>> getSuggestedRecipes() {
         return suggestedRecipes;
+    }
+
+    public LiveData<List<FirestoreVideo>> getVideos() {
+        return videos;
     }
 
     public HomeViewModel() {
@@ -148,6 +154,22 @@ public class HomeViewModel extends ViewModel {
                 .addOnFailureListener(e -> {
                     Log.d("Firestore", "Error getting documents: ", e);
                 });
+    }
+
+    public void loadVideos() {
+        FirebaseFirestore.getInstance()
+            .collection("videos")
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                List<FirestoreVideo> videoList = new ArrayList<>();
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    videoList.add(FirestoreVideo.fromFirestoreDoc(doc));
+                }
+                videos.setValue(videoList);
+            })
+            .addOnFailureListener(e -> {
+                // Gérer l'erreur
+            });
     }
 
 }

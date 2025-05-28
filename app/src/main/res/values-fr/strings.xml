@@ -46,4 +46,5 @@
     <string name="save_recipe">Sauvegarder la recette</string>
     <string name="recipe_saved">Recette sauvegardée</string>
     <string name="recipe_removed">Recette retirée des favoris</string>
+    <string name="videos_to_discover">Vidéos à découvrir</string>
 </resources>
