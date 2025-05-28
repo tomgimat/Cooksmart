@@ -44,7 +44,7 @@
     <string name="unknown_duration">Unknown time</string>
     <string name="filter_duration">Max duration: %1$d min</string>
     <string name="filter_ingredients">Max ingredients: %1$d</string>
-
-
-
+    <string name="save_recipe">Sauvegarder la recette</string>
+    <string name="recipe_saved">Recette sauvegardée</string>
+    <string name="recipe_removed">Recette retirée des favoris</string>
 </resources>

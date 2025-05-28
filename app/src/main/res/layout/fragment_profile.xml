@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="72dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:src="@drawable/placeholder_plate" />
 
                 <TextView
                     android:id="@+id/usernameView"
@@ -124,27 +125,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 3. Actions Supplémentaires -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/ProfileCard"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/cardAvatarBackground">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-                <Button
-                    android:id="@+id/btnChangeAvatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="@color/white"
-                    android:text="@string/change_avatar" />
-                <!-- plus tard : galerie ou upload -->
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
         <!-- Section des recettes sauvegardées -->
         <TextView
             android:layout_width="wrap_content"
@@ -158,8 +138,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/savedRecipesRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="200dp"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"

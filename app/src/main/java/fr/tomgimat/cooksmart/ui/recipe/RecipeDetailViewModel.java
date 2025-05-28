@@ -41,7 +41,7 @@ public class RecipeDetailViewModel extends ViewModel {
                     .get().addOnSuccessListener(doc -> {
                         if (doc.exists()) {
                             //Si duration existe
-                            if (doc.contains("duration") && doc.getLong("duration") != null) {
+                            if (doc.contains("duration") && doc.getLong("duration") != null && doc.getLong("duration") > 0) {
                                 recipeLiveData.setValue(FirestoreRecipe.fromFirestoreDoc(doc));
                             } else {
                                 try {
@@ -139,6 +139,7 @@ public class RecipeDetailViewModel extends ViewModel {
                                                 .getJSONObject(0)
                                                 .getString("text")
                                                 .replaceAll("[^0-9]", "");
+                                        Log.d("GEMINI", answer);
                                         if (!answer.isEmpty()) {
                                             duration = Integer.parseInt(answer);
                                         }

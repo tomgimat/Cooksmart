@@ -26,7 +26,7 @@
     <string name="gluten_free">Sans Gluten</string>
     <string name="lactose_free">Sans Lactose</string>
     <string name="validate_prefs">Valider les préférences</string>
-    <string name="change_avatar">Changer l’avatar</string>
+    <string name="change_avatar">Changer l\'avatar</string>
     <string name="food_preferences">Préférences alimentaires :</string>
     <string name="logout">Déconnexion</string>
     <string name="meal_image">Meal Image</string>
@@ -43,6 +43,7 @@
     <string name="unknown_duration">Durée inconnue</string>
     <string name="filter_duration">Temps max: %1$d min</string>
     <string name="filter_ingredients">Max ingrédients: %1$d</string>
-
-
+    <string name="save_recipe">Sauvegarder la recette</string>
+    <string name="recipe_saved">Recette sauvegardée</string>
+    <string name="recipe_removed">Recette retirée des favoris</string>
 </resources>

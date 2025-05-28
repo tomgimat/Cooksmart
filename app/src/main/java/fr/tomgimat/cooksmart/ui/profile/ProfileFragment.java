@@ -2,38 +2,48 @@ package fr.tomgimat.cooksmart.ui.profile;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import fr.tomgimat.cooksmart.MainActivity;
 import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.data.DietaryPreference;
+import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
@@ -67,8 +77,8 @@ public class ProfileFragment extends Fragment {
         // Initialisation du RecyclerView pour les recettes sauvegardées
         savedRecipesRecyclerView = binding.savedRecipesRecyclerView;
         savedRecipesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        savedRecipeIds = new ArrayList<>();
-        savedRecipesAdapter = new SavedRecipesAdapter(savedRecipeIds);
+        savedRecipesRecyclerView.setHasFixedSize(true);
+        savedRecipesAdapter = new SavedRecipesAdapter(new ArrayList<>());
         savedRecipesRecyclerView.setAdapter(savedRecipesAdapter);
 
         // Charger les recettes sauvegardées
@@ -195,33 +205,99 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Charger les recettes sauvegardées de l'utilisateur
+     */
     private void loadSavedRecipes() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        
+        Log.d("ProfileFragment", "Chargement des recettes sauvegardées pour l'utilisateur: " + uid);
+
         db.collection("saved_recipes").document(uid)
-            .get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
-                    if (recipeIds != null) {
-                        savedRecipeIds.clear();
-                        savedRecipeIds.addAll(recipeIds);
-                        savedRecipesAdapter.notifyDataSetChanged();
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
+                        Log.d("ProfileFragment", "Recettes trouvées: " + (recipeIds != null ? recipeIds.size() : 0));
+                        if (recipeIds != null && !recipeIds.isEmpty()) {
+                            Log.d("ProfileFragment", "IDs des recettes: " + recipeIds);
+                            loadRecipeDetails(recipeIds);
+                        } else {
+                            Log.d("ProfileFragment", "Aucune recette sauvegardée");
+                            savedRecipesAdapter.setRecipes(new ArrayList<>());
+                        }
+                    } else {
+                        Log.d("ProfileFragment", "Document saved_recipes n'existe pas");
+                        savedRecipesAdapter.setRecipes(new ArrayList<>());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileFragment", "Erreur lors du chargement des recettes sauvegardées", e);
+                    Toast.makeText(getContext(), "Erreur lors du chargement des recettes sauvegardées", Toast.LENGTH_SHORT).show();
+                    savedRecipesAdapter.setRecipes(new ArrayList<>());
+                });
+    }
+
+    /**
+     * Charger les détails de chaque recette sauvegardée
+     *
+     * @param recipeIds
+     */
+    private void loadRecipeDetails(List<String> recipeIds) {
+        if (recipeIds.isEmpty()) {
+            Log.d("ProfileFragment", "Liste de recettes vide");
+            savedRecipesAdapter.setRecipes(new ArrayList<>());
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        Log.d("ProfileFragment", "Début du chargement des détails pour " + recipeIds.size() + " recettes");
+
+        for (String recipeId : recipeIds) {
+            tasks.add(db.collection("recipes").document(recipeId).get());
+        }
+
+        Tasks.whenAll(tasks)
+            .addOnSuccessListener(aVoid -> {
+                List<FirestoreRecipe> recipes = new ArrayList<>();
+                Log.d("ProfileFragment", "Toutes les tâches terminées, traitement des résultats");
+                
+                for (Task<DocumentSnapshot> task : tasks) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc != null && doc.exists()) {
+                        FirestoreRecipe recipe = FirestoreRecipe.fromFirestoreDoc(doc);
+                        recipes.add(recipe);
+                        Log.d("ProfileFragment", "Recette chargée: " + recipe.name + " (ID: " + recipe.id + ")");
+                    } else {
+                        Log.w("ProfileFragment", "Document non trouvé ou null");
                     }
                 }
+                
+                Log.d("ProfileFragment", "Nombre total de recettes chargées: " + recipes.size());
+                savedRecipesAdapter.setRecipes(recipes);
             })
             .addOnFailureListener(e -> {
-                Toast.makeText(getContext(), "Erreur lors du chargement des recettes sauvegardées", Toast.LENGTH_SHORT).show();
+                Log.e("ProfileFragment", "Erreur lors du chargement des recettes", e);
+                Toast.makeText(getContext(), "Erreur lors du chargement des recettes", Toast.LENGTH_SHORT).show();
+                savedRecipesAdapter.setRecipes(new ArrayList<>());
             });
     }
 
     // Classe interne pour l'adaptateur des recettes sauvegardées
     private class SavedRecipesAdapter extends RecyclerView.Adapter<SavedRecipesAdapter.ViewHolder> {
-        private List<String> recipeIds;
+        private List<FirestoreRecipe> recipes;
 
-        public SavedRecipesAdapter(List<String> recipeIds) {
-            this.recipeIds = recipeIds;
+        public SavedRecipesAdapter(List<FirestoreRecipe> recipes) {
+            this.recipes = recipes;
+            Log.d("ProfileFragment", "Adapter créé avec " + recipes.size() + " recettes");
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        public void setRecipes(List<FirestoreRecipe> recipes) {
+            Log.d("ProfileFragment", "Mise à jour de l'adaptateur avec " + recipes.size() + " recettes");
+            this.recipes = recipes;
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -234,22 +310,49 @@ public class ProfileFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String recipeId = recipeIds.get(position);
-            // TODO: Charger les détails de la recette depuis Firestore
-            holder.recipeTitle.setText("Recette " + recipeId);
+            FirestoreRecipe recipe = recipes.get(position);
+            Log.d("ProfileFragment", "Affichage de la recette: " + recipe.name + " à la position " + position);
+            
+            holder.recipeTitle.setText(recipe.name);
+            holder.recipeDescription.setText(recipe.area + " • " + recipe.category + " • " +
+                    (recipe.duration != 0 ? recipe.duration + " min" : getString(R.string.unknown_duration)));
+
+            // Charger l'image de la recette
+            if (recipe.imageUrl != null && !recipe.imageUrl.isEmpty()) {
+                Glide.with(holder.itemView.getContext())
+                    .load(recipe.imageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_plate)
+                    .error(R.drawable.placeholder_plate)
+                    .into(holder.recipeImage);
+            } else {
+                holder.recipeImage.setImageResource(R.drawable.placeholder_plate);
+            }
+
+            holder.itemView.setOnClickListener(v -> {
+                Log.d("ProfileFragment", "Clic sur la recette: " + recipe.name);
+                Bundle args = new Bundle();
+                args.putString("recipe_id", recipe.id);
+                Navigation.findNavController(v).navigate(R.id.action_profileFragment_to_recipeDetailFragment, args);
+            });
         }
 
         @Override
         public int getItemCount() {
-            return recipeIds.size();
+            Log.d("ProfileFragment", "getItemCount appelé: " + recipes.size() + " items");
+            return recipes.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView recipeTitle;
+            TextView recipeDescription;
+            ImageView recipeImage;
 
             ViewHolder(View view) {
                 super(view);
                 recipeTitle = view.findViewById(R.id.recipe_title);
+                recipeDescription = view.findViewById(R.id.recipe_description);
+                recipeImage = view.findViewById(R.id.recipe_image);
             }
         }
     }
@@ -271,84 +374,5 @@ public class ProfileFragment extends Fragment {
         requireActivity().finish();
     }
 
-    /**
-     * Ajoute une recette à la liste des recettes sauvegardées
-     * @param recipeId ID de la recette à sauvegarder
-     */
-    public static void saveRecipe(String recipeId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DocumentReference savedRecipesRef = db.collection("saved_recipes").document(uid);
-
-        savedRecipesRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // Le document existe, on ajoute la recette à la liste existante
-                List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
-                if (recipeIds == null) {
-                    recipeIds = new ArrayList<>();
-                }
-                if (!recipeIds.contains(recipeId)) {
-                    recipeIds.add(recipeId);
-                    savedRecipesRef.update("recipe_ids", recipeIds);
-                }
-            } else {
-                // Le document n'existe pas, on le crée avec la première recette
-                List<String> recipeIds = new ArrayList<>();
-                recipeIds.add(recipeId);
-                Map<String, Object> data = new HashMap<>();
-                data.put("recipe_ids", recipeIds);
-                savedRecipesRef.set(data);
-            }
-        });
-    }
-
-    /**
-     * Supprime une recette de la liste des recettes sauvegardées
-     * @param recipeId ID de la recette à supprimer
-     */
-    public static void removeRecipe(String recipeId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DocumentReference savedRecipesRef = db.collection("saved_recipes").document(uid);
-
-        savedRecipesRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
-                if (recipeIds != null) {
-                    recipeIds.remove(recipeId);
-                    if (recipeIds.isEmpty()) {
-                        // Si la liste est vide, on supprime le document
-                        savedRecipesRef.delete();
-                    } else {
-                        savedRecipesRef.update("recipe_ids", recipeIds);
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Vérifie si une recette est sauvegardée
-     * @param recipeId ID de la recette à vérifier
-     * @param callback Callback pour retourner le résultat
-     */
-    public static void isRecipeSaved(String recipeId, OnRecipeSavedCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DocumentReference savedRecipesRef = db.collection("saved_recipes").document(uid);
-
-        savedRecipesRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> recipeIds = (List<String>) documentSnapshot.get("recipe_ids");
-                callback.onResult(recipeIds != null && recipeIds.contains(recipeId));
-            } else {
-                callback.onResult(false);
-            }
-        }).addOnFailureListener(e -> callback.onResult(false));
-    }
-
-    public interface OnRecipeSavedCallback {
-        void onResult(boolean isSaved);
-    }
 
 }
