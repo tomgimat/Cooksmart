@@ -70,4 +70,11 @@
     <string name="settings_saved">Settings saved</string>
     <string name="settings_reset_confirm">Are you sure you want to reset all settings to default values?</string>
     <string name="settings_reset_success">Settings have been reset successfully</string>
+
+    <!-- Scan Ingredient -->
+    <string name="scan_ingredient">Scanner un ingrédient</string>
+    <string name="ingredient_recognized">Ingrédient reconnu : %1$s</string>
+    <string name="no_ingredient_found">Aucun ingrédient correspondant trouvé dans l\'application</string>
+    <string name="camera_permission_required">L\'accès à la caméra est nécessaire pour scanner les ingrédients</string>
+    <string name="error_processing_image">Erreur lors du traitement de l\'image</string>
 </resources>

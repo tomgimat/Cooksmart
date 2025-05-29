@@ -1,5 +1,6 @@
 package fr.tomgimat.cooksmart.ui.home;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,7 +13,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +25,28 @@ import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreVideo;
 import fr.tomgimat.cooksmart.data.mealdb.Meal;
 import fr.tomgimat.cooksmart.data.mealdb.MealDbApiResponse;
+import fr.tomgimat.cooksmart.utils.GeminiUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class HomeViewModel extends ViewModel {
 
+    private static final String TAG = "HomeViewModel";
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private MutableLiveData<String> welcomeText = new MutableLiveData<>();
     private MutableLiveData<List<Meal>> randomMeals = new MutableLiveData<>();
     // Suggestions list
     private MutableLiveData<List<FirestoreRecipe>> suggestedRecipes = new MutableLiveData<>();
     private final MutableLiveData<List<FirestoreVideo>> videos = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<String> scanResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isScanning = new MutableLiveData<>(false);
+    private List<String> availableIngredients = new ArrayList<>();
 
     public LiveData<List<Meal>> getRandomMeals() {
         return randomMeals;
@@ -47,6 +61,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public HomeViewModel() {
+        loadAvailableIngredients();
     }
 
     public LiveData<String> getText() {
@@ -172,4 +187,97 @@ public class HomeViewModel extends ViewModel {
             });
     }
 
+    private void loadAvailableIngredients() {
+        db.collection("ingredients")
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                availableIngredients.clear();
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    String ingredientName = document.getString("name");
+                    if (ingredientName != null) {
+                        availableIngredients.add(ingredientName.toLowerCase());
+                    }
+                }
+                Log.d(TAG, "Ingrédients chargés : " + availableIngredients.size());
+            })
+            .addOnFailureListener(e -> Log.e(TAG, "Erreur lors du chargement des ingrédients", e));
+    }
+
+    public void scanIngredient(Bitmap image) {
+        if (availableIngredients.isEmpty()) {
+            scanResult.setValue("Erreur : Liste d'ingrédients non chargée");
+            return;
+        }
+
+        isScanning.setValue(true);
+        GeminiUtils.recognizeIngredient(image, availableIngredients, new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                Log.e(TAG, "Erreur lors de la reconnaissance d'ingrédient", e);
+                scanResult.postValue("Erreur de connexion");
+                isScanning.postValue(false);
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                try {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+                    JSONArray candidates = jsonResponse.getJSONArray("candidates");
+                    if (candidates.length() > 0) {
+                        JSONObject candidate = candidates.getJSONObject(0);
+                        JSONObject content = candidate.getJSONObject("content");
+                        JSONArray parts = content.getJSONArray("parts");
+                        String recognizedIngredient = parts.getJSONObject(0).getString("text").trim().toLowerCase();
+
+                        if ("non_trouve".equals(recognizedIngredient)) {
+                            scanResult.postValue("Aucun ingrédient correspondant trouvé dans l'application");
+                        } else {
+                            // Vérifier si l'ingrédient est dans la liste
+                            String matchedIngredient = findBestMatch(recognizedIngredient);
+                            if (matchedIngredient != null) {
+                                addIngredientToUserSelection(matchedIngredient);
+                                scanResult.postValue("Ingrédient reconnu : " + matchedIngredient);
+                            } else {
+                                scanResult.postValue("Aucun ingrédient correspondant trouvé dans l'application");
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Erreur lors du parsing de la réponse", e);
+                    scanResult.postValue("Erreur lors du traitement de l'image");
+                } finally {
+                    isScanning.postValue(false);
+                }
+            }
+        });
+    }
+
+    private String findBestMatch(String recognizedIngredient) {
+        // Recherche exacte d'abord
+        if (availableIngredients.contains(recognizedIngredient)) {
+            return recognizedIngredient;
+        }
+
+        // Recherche de similarité (à améliorer selon les besoins)
+        for (String ingredient : availableIngredients) {
+            if (ingredient.contains(recognizedIngredient) || recognizedIngredient.contains(ingredient)) {
+                return ingredient;
+            }
+        }
+        return null;
+    }
+
+    private void addIngredientToUserSelection(String ingredient) {
+        // TODO: Implémenter l'ajout de l'ingrédient à la sélection de l'utilisateur
+        // Cela dépendra de votre structure de données Firestore
+    }
+
+    public LiveData<String> getScanResult() {
+        return scanResult;
+    }
+
+    public LiveData<Boolean> getIsScanning() {
+        return isScanning;
+    }
 }
