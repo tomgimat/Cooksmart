@@ -47,4 +47,12 @@
     <string name="recipe_saved">Recette sauvegardée</string>
     <string name="recipe_removed">Recette retirée des favoris</string>
     <string name="videos_to_discover">Vidéos à découvrir</string>
+    <string name="ingredients_card_description">Sélectionnez les ingrédients que vous avez chez vous</string>
+    <string name="my_ingredients">Mes ingrédients</string>
+    <string name="no_owned_ingredients">Aucun ingrédient dans votre liste</string>
+    <string name="select_ingredients">Sélectionner des ingrédients</string>
+    <string name="search_ingredients">Rechercher un ingrédient…</string>
+    <string name="validate_selection">Valider la sélection</string>
+    <string name="no_recipes_found">Aucune recette trouvée avec ces ingrédients</string>
+    <string name="ingredients_card_title">Mes ingrédients</string>
 </resources>

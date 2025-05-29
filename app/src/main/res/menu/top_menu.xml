@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/fragment_settings"
+        android:icon="@drawable/coffee_24px"
+        android:title="@string/settings_general"
+        android:orderInCategory="90"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/fragment_login"
         android:icon="@drawable/account_circle_24px"
         android:title="@string/profile"

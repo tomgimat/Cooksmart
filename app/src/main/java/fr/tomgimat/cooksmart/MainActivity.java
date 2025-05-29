@@ -112,8 +112,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 // Utilisateur non connecté, rediriger vers AuthActivity
                 authLauncher.launch(intent);
-
             }
+            return true;
+        } else if (item.getItemId() == R.id.fragment_settings) {
+            Navigation.findNavController(this, R.id.nav_host_fragment_activity_main)
+                    .navigate(R.id.fragment_settings);
             return true;
         }
         return super.onOptionsItemSelected(item);

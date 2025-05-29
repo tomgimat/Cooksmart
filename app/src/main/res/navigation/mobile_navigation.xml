@@ -21,7 +21,15 @@
         android:id="@+id/fragment_my_space"
         android:name="fr.tomgimat.cooksmart.ui.myspace.MySpaceFragment"
         android:label="@string/title_my_space"
-        tools:layout="@layout/fragment_my_space" />
+        tools:layout="@layout/fragment_my_space">
+        <action
+            android:id="@+id/action_navigation_myspace_to_ingredientsSelectionFragment"
+            app:destination="@id/fragment_ingredients_selection"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragment_profile"
@@ -59,11 +67,20 @@
         tools:layout="@layout/fragment_recipe_detail">
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_ingredients_selection"
+        android:name="fr.tomgimat.cooksmart.ui.ingredients.IngredientsSelectionFragment"
+        android:label="@string/select_ingredients"
+        tools:layout="@layout/fragment_ingredients_selection" />
 
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="fr.tomgimat.cooksmart.ui.settings.SettingsFragment"
+        android:label="@string/settings_general"
+        tools:layout="@layout/fragment_settings" />
 
     <action
         android:id="@+id/action_global_login"
         app:destination="@id/fragment_login" />
-
 
 </navigation>

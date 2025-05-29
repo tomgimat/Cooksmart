@@ -34,6 +34,9 @@ public class FirestoreRecipe implements RecipeDisplayable {
     @Override
     public String getImageUrl() { return imageUrl; }
 
+    public List<String> getIngredients() {
+        return ingredients;
+    }
 
     public static FirestoreRecipe fromFirestoreDoc(com.google.firebase.firestore.DocumentSnapshot doc) {
         FirestoreRecipe recipe = new FirestoreRecipe();

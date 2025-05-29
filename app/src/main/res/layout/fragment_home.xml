@@ -110,10 +110,10 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingStart="4dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="280dp"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingEnd="4dp" />
+                android:paddingBottom="8dp" />
 
         </LinearLayout>
     </ScrollView>
