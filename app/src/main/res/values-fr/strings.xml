@@ -55,4 +55,18 @@
     <string name="validate_selection">Valider la sélection</string>
     <string name="no_recipes_found">Aucune recette trouvée avec ces ingrédients</string>
     <string name="ingredients_card_title">Mes ingrédients</string>
+
+    <!-- Settings -->
+    <string name="settings_general">Préférences Générales</string>
+    <string name="settings_notifications">Activer les Notifications</string>
+    <string name="settings_offline_mode">Mode Hors-ligne</string>
+    <string name="settings_cooking">Préférences de Cuisine</string>
+    <string name="settings_cooking_timer">Minuteur de Cuisine</string>
+    <string name="settings_search">Préférences de Recherche</string>
+    <string name="settings_search_history">Historique de Recherche</string>
+    <string name="settings_smart_suggestions">Suggestions Intelligentes</string>
+    <string name="settings_reset">Réinitialiser les Paramètres</string>
+    <string name="settings_saved">Paramètres sauvegardés</string>
+    <string name="settings_reset_confirm">Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ?</string>
+    <string name="settings_reset_success">Les paramètres ont été réinitialisés avec succès</string>
 </resources>
