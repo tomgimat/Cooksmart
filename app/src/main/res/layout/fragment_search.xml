@@ -60,9 +60,37 @@
             android:layout_height="wrap_content"
             android:text="@string/lactose_free" />
 
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLowSalt"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/low_salt" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLowSugar"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/low_sugar" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPescetarian"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pescetarian" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipHalal"
+            style="@style/Widget.MaterialComponents.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/halal" />
+
     </com.google.android.material.chip.ChipGroup>
 
-    <!-- Filtres avancés (slider durée, nombre d’ingrédients) -->
+    <!-- Filtres avancés (slider durée, nombre d'ingrédients) -->
     <com.google.android.material.slider.Slider
         android:id="@+id/sliderDuration"
         android:layout_width="match_parent"

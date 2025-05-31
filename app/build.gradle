@@ -7,9 +7,10 @@ android {
     namespace 'fr.tomgimat.cooksmart'
     compileSdk 35
 
+
     defaultConfig {
         applicationId "fr.tomgimat.cooksmart"
-        minSdk 26
+        minSdk 30
         targetSdk 35
         versionCode 1
         versionName "1.0"
@@ -63,5 +64,6 @@ dependencies {
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.okhttp
+    implementation 'androidx.core:core:1.12.0'
 
 }

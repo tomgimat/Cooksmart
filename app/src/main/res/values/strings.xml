@@ -31,29 +31,30 @@
     <string name="food_preferences">Food preferences :</string>
     <string name="logout">Log out</string>
     <string name="meal_image">Meal Image</string>
-    <string name="suggestions_for_you">Suggestions pour vous</string>
+    <string name="suggestions_for_you">For you suggestions</string>
     <string name="welcome_to_cooksmart">Welcome to CookSmart !</string>
     <string name="random_meals">Random Meals...</string>
     <string name="vegan">Vegan</string>
     <string name="low_sugar">Low Sugar</string>
     <string name="pescetarian">Pescetarian</string>
     <string name="start_step_by_step_recipe">Start Step-by-step</string>
-    <string name="informations_sur_la_recette">Informations sur la recette</string>
-    <string name="search_recipe_hint">Cherchez une recette...</string>
-    <string name="estimated_time">Temps estimé : %1$d min</string>
+    <string name="informations_sur_la_recette">Recipe informations</string>
+    <string name="search_recipe_hint">Search a recipe...</string>
+    <string name="estimated_time">Estimated time : %1$d min</string>
     <string name="unknown_duration">Unknown time</string>
     <string name="filter_duration">Max duration: %1$d min</string>
     <string name="filter_ingredients">Max ingredients: %1$d</string>
-    <string name="save_recipe">Sauvegarder la recette</string>
-    <string name="recipe_saved">Recette sauvegardée</string>
-    <string name="recipe_removed">Recette retirée des favoris</string>
+    <string name="save_recipe">Save recipe</string>
+    <string name="recipe_saved">Recipe saved</string>
+    <string name="recipe_removed">Removed from saved recipes</string>
     <string name="videos_to_discover">Videos to discover</string>
-    <string name="no_recipes_found">Aucune recette trouvée avec ces ingrédients</string>
-    <string name="ingredients_card_title">Mes ingrédients</string>
-    <string name="ingredients_card_description">Sélectionnez les ingrédients que vous avez chez vous</string>
+    <string name="no_recipes_found">No recipes found with these ingredients</string>
+    <string name="ingredients_card_title">My ingredients</string>
+    <string name="ingredients_card_description">Select ingredients you have</string>
     <string name="my_ingredients">My Ingredients</string>
     <string name="no_owned_ingredients">No ingredients in your list yet</string>
     <string name="select_ingredients">Select Ingredients</string>
+    <string name="reset_ingredients_list">Reset List</string>
     <string name="search_ingredients">Search an ingredient</string>
     <string name="validate_selection">Validate selection</string>
 
@@ -70,11 +71,39 @@
     <string name="settings_saved">Settings saved</string>
     <string name="settings_reset_confirm">Are you sure you want to reset all settings to default values?</string>
     <string name="settings_reset_success">Settings have been reset successfully</string>
+    <string name="settings_change_language">Change Language</string>
 
     <!-- Scan Ingredient -->
-    <string name="scan_ingredient">Scanner un ingrédient</string>
-    <string name="ingredient_recognized">Ingrédient reconnu : %1$s</string>
-    <string name="no_ingredient_found">Aucun ingrédient correspondant trouvé dans l\'application</string>
-    <string name="camera_permission_required">L\'accès à la caméra est nécessaire pour scanner les ingrédients</string>
-    <string name="error_processing_image">Erreur lors du traitement de l\'image</string>
+    <string name="scan_ingredient">Scan ingredient</string>
+    <string name="ingredient_recognized">Recognized ingredient : %1$s</string>
+    <string name="no_ingredient_found">No corresponding ingredient found in the application</string>
+    <string name="camera_permission_required">Camera permission is required to scan ingredients</string>
+    <string name="error_processing_image">Error processing image</string>
+    <string name="ingredients_saved">Your ingredients have been saved</string>
+    <string name="remove_ingredient">Remove Ingredient</string>
+    <string name="low_salt">Low salt</string>
+    <string name="halal">Halal</string>
+
+    <!-- New strings for compatible recipes -->
+    <string name="compatible_recipes">Recipes compatible with your ingredients</string>
+    <string name="suggested_recipes">Suggested recipes based on your ingredients</string>
+
+    <!-- Recipe Detail -->
+    <string name="recipe_ingredients">Recipe Ingredients</string>
+    <string name="missing_ingredients">Missing ingredients</string>
+    <string name="ingredient_owned">Owned</string>
+
+    <!-- New strings for step-by-step recipe -->
+    <string name="step_number">Step %1$d of %2$d</string>
+    <string name="start_timer">Start the timer</string>
+    <string name="stop_timer">Stop the timer</string>
+    <string name="speak_step">Read the step</string>
+    <string name="next_step">Next step</string>
+    <string name="previous_step">Previous step</string>
+    <string name="timer_format">%1$02d:%2$02d</string>
+
+    <!-- New strings for start step-by-step -->
+    <string name="start_step_by_step">Step-by-step mode</string>
+    <string name="sign_up_or_log_in_for_complete_access">Sign up or Log in for complete access</string>
+
 </resources>

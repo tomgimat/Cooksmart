@@ -58,7 +58,11 @@ public class SearchViewModel extends ViewModel {
             boolean dietOk = (f.vegetarian == null || recipe.isVegetarian == f.vegetarian)
                     && (f.vegan == null || recipe.isVegan == f.vegan)
                     && (f.glutenFree == null || recipe.isGlutenFree == f.glutenFree)
-                    && (f.lactoseFree == null || recipe.isLactoseFree == f.lactoseFree);
+                    && (f.lactoseFree == null || recipe.isLactoseFree == f.lactoseFree)
+                    && (f.lowSalt == null || recipe.isLowSalt == f.lowSalt)
+                    && (f.lowSugar == null || recipe.isLowSugar == f.lowSugar)
+                    && (f.pescetarian == null || recipe.isPescetarian == f.pescetarian)
+                    && (f.halal == null || recipe.isHalal == f.halal);
 
             boolean durationOk = f.maxDuration == null || (recipe.duration != null && recipe.duration <= f.maxDuration);
             boolean ingOk = f.maxIngredients == null || (recipe.ingredients != null && recipe.ingredients.size() <= f.maxIngredients);

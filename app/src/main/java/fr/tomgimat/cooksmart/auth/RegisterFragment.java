@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.databinding.FragmentRegisterBinding;
+import fr.tomgimat.cooksmart.MainActivity;
 
 
 public class RegisterFragment extends Fragment {
@@ -68,18 +71,44 @@ public class RegisterFragment extends Fragment {
                     db.collection("users").document(uid)
                             .set(profile, SetOptions.merge())
                             .addOnSuccessListener(a -> {
-                                getContext().getSharedPreferences("cooksmart", MODE_PRIVATE)
-                                        .edit()
-                                        .putBoolean("profile_exists", true)
-                                        .apply();
+                                // Créer le document de préférences alimentaires par défaut pour le nouvel utilisateur
+                                Map<String, Boolean> defaultPreferences = new HashMap<>();
+                                defaultPreferences.put("vegetarian", false);
+                                defaultPreferences.put("glutenFree", false);
+                                defaultPreferences.put("lowSalt", false);
+                                defaultPreferences.put("lactoseFree", false);
+                                defaultPreferences.put("lowSugar", false);
+                                defaultPreferences.put("vegan", false);
+                                defaultPreferences.put("pescitarian", false);
+                                defaultPreferences.put("halal", false);
 
-                                requireActivity().setResult(Activity.RESULT_OK);
-                                requireActivity().finish();
+                                db.collection("users").document(uid).set(Collections.singletonMap("preferences", defaultPreferences), SetOptions.merge())
+                                        .addOnSuccessListener(b -> {
+                                            handleAuthenticationSuccess();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // Loguer l'erreur mais continuer
+                                            Log.e("RegisterFragment", "Erreur lors de l'initialisation des préférences alimentaires", e);
+                                            handleAuthenticationSuccess();
+                                        });
                             });
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show()
                 );
+    }
+
+    private void handleAuthenticationSuccess() {
+        getContext().getSharedPreferences("cooksmart", MODE_PRIVATE)
+                .edit()
+                .putBoolean("profile_exists", true)
+                .apply();
+
+        // Redémarrer MainActivity et terminer AuthActivity
+        android.content.Intent intent = new android.content.Intent(requireActivity(), MainActivity.class);
+        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }
 

@@ -1,6 +1,7 @@
 package fr.tomgimat.cooksmart.ui.home;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,8 +39,7 @@ import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreVideo;
 import fr.tomgimat.cooksmart.data.mealdb.Meal;
 import fr.tomgimat.cooksmart.databinding.FragmentHomeBinding;
-import fr.tomgimat.cooksmart.ui.adapter.RecipeImageAdapter;
-import fr.tomgimat.cooksmart.ui.adapter.VideoAdapter;
+import fr.tomgimat.cooksmart.AuthActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -58,8 +59,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Initialiser le launcher pour la permission de la caméra
+
         requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
@@ -71,7 +71,6 @@ public class HomeFragment extends Fragment {
             }
         );
 
-        // Initialiser le launcher pour la prise de photo
         takePictureLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
@@ -90,6 +89,23 @@ public class HomeFragment extends Fragment {
         setupScanButton();
         observeViewModel();
 
+        boolean isUserLoggedIn = FirebaseAuth.getInstance().getCurrentUser() != null;
+
+        // Compatible Recipes Adapter
+        RecipeImageAdapter<FirestoreRecipe> compatibleRecipeAdapter = new RecipeImageAdapter<>(new ArrayList<>(), recipe -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("recipe_id", recipe.id);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.fragment_meal_detail, bundle);
+        }, R.layout.item_meal_image);
+        binding.rvCompatibleRecipes.setAdapter(compatibleRecipeAdapter);
+        binding.rvCompatibleRecipes.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        viewModel.getCompatibleRecipes().observe(getViewLifecycleOwner(), recipes -> {
+            compatibleRecipeAdapter.setRecipes(recipes);
+            binding.textCompatibleRecipes.setVisibility(recipes.isEmpty() ? View.GONE : View.VISIBLE);
+            binding.rvCompatibleRecipes.setVisibility(recipes.isEmpty() ? View.GONE : View.VISIBLE);
+        });
+
         //Custom Recipe Adapter
         customRecipeAdapter = new RecipeImageAdapter<>(customMeals, recipe -> {
             Bundle bundle = new Bundle();
@@ -105,9 +121,11 @@ public class HomeFragment extends Fragment {
 
         //Random Meal Adapter
         randomMealAdapter = new RecipeImageAdapter<>(randomMeals, randomMeal -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("meal_id", randomMeal.id);
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.fragment_meal_detail, bundle);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("meal_id", randomMeal.id);
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.fragment_meal_detail, bundle);
+            }
         }, R.layout.item_meal_image);
         binding.rvRandomMeals.setAdapter(randomMealAdapter);
         binding.rvRandomMeals.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
@@ -129,6 +147,7 @@ public class HomeFragment extends Fragment {
         viewModel.loadSuggestionsForCurrentUser();
         viewModel.fetchRandomMealsIfNeeded();
         viewModel.loadVideos();
+        viewModel.loadCompatibleRecipes();
 
         /*
         Message d'accueil
@@ -137,9 +156,37 @@ public class HomeFragment extends Fragment {
         viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         viewModel.updateWelcomeText();
 
+        //        viewModel.cleanDuplicateIngredients();
+        // Gérer l'affichage du message de connexion et cacher les éléments restreints si l'utilisateur n'est pas connecté
+        if (!isUserLoggedIn) {
+            binding.textViewAuthPrompt.setVisibility(View.VISIBLE);
+            binding.fabScanIngredient.setVisibility(View.GONE);
+            // Ne pas charger les vidéos et les recettes compatibles si déconnecté
+            binding.rvVideos.setVisibility(View.GONE);
+            binding.rvCompatibleRecipes.setVisibility(View.GONE);
+            binding.textCompatibleRecipes.setVisibility(View.GONE);
+            binding.textVideosToDiscover.setVisibility(View.GONE);
+        } else {
+            binding.textViewAuthPrompt.setVisibility(View.GONE);
+            binding.fabScanIngredient.setVisibility(View.VISIBLE);
+            // Charger les vidéos et les recettes compatibles si connecté
+             binding.rvVideos.setVisibility(View.VISIBLE);
+             binding.rvCompatibleRecipes.setVisibility(View.VISIBLE);
+             binding.textVideosToDiscover.setVisibility(View.VISIBLE);
+            // La visibilité de textCompatibleRecipes est gérée par l'observation du LiveData
+        }
+
+        // Configurer le bouton de prompt de connexion
+        binding.textViewAuthPrompt.setOnClickListener(v -> {
+            startActivity(new Intent(requireActivity(), AuthActivity.class));
+        });
+
         return binding.getRoot();
     }
 
+    /**
+     * Setup du bouton de scan d'ingrédient
+     */
     private void setupScanButton() {
         binding.fabScanIngredient.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -151,6 +198,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Lancement de la caméra
+     */
     private void startCamera() {
         try {
             currentPhotoUri = requireContext().getContentResolver().insert(
@@ -166,6 +216,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Traitement de l'image
+     * @param photoUri
+     */
     private void processImage(Uri photoUri) {
         try {
             InputStream inputStream = requireContext().getContentResolver().openInputStream(photoUri);
@@ -180,6 +234,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Observe les changements du ViewModel
+     */
     private void observeViewModel() {
         viewModel.getScanResult().observe(getViewLifecycleOwner(), result -> {
             if (result != null) {
@@ -196,8 +253,30 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        homeViewModel.updateWelcomeText();
+        // Mettre à jour l'affichage en fonction de l'état de connexion à chaque reprise du fragment
+        boolean isUserLoggedIn = FirebaseAuth.getInstance().getCurrentUser() != null;
+        if (!isUserLoggedIn) {
+            binding.textViewAuthPrompt.setVisibility(View.VISIBLE);
+            binding.fabScanIngredient.setVisibility(View.GONE);
+            binding.rvVideos.setVisibility(View.GONE);
+            binding.rvCompatibleRecipes.setVisibility(View.GONE);
+            binding.textCompatibleRecipes.setVisibility(View.GONE);
+            binding.textVideosToDiscover.setVisibility(View.GONE);
+        } else {
+            binding.textViewAuthPrompt.setVisibility(View.GONE);
+            binding.fabScanIngredient.setVisibility(View.VISIBLE);
+             binding.rvVideos.setVisibility(View.VISIBLE);
+             binding.rvCompatibleRecipes.setVisibility(View.VISIBLE);
+             binding.textVideosToDiscover.setVisibility(View.VISIBLE);
+            // La visibilité de textCompatibleRecipes est gérée par l'observation du LiveData
+
+            // Recharger les données restreintes si l'utilisateur vient de se connecter
+            HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+            homeViewModel.updateWelcomeText(); // Ceci devrait déjà être géré par le ViewModel
+            homeViewModel.fetchRandomMealsIfNeeded(); // Ceci devrait déjà être géré par le ViewModel
+            homeViewModel.loadVideos(); // Recharger les vidéos
+            homeViewModel.loadCompatibleRecipes(); // Recharger les recettes compatibles
+        }
     }
 
     @Override

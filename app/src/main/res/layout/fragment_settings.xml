@@ -47,6 +47,15 @@
                     android:text="@string/settings_offline_mode"
                     android:textSize="16sp"/>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonChangeLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/settings_change_language"
+                    android:textSize="16sp"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

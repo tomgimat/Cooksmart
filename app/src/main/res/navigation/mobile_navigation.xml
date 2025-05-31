@@ -79,8 +79,26 @@
         android:label="@string/settings_general"
         tools:layout="@layout/fragment_settings" />
 
+    <fragment
+        android:id="@+id/fragment_step_by_step"
+        android:name="fr.tomgimat.cooksmart.ui.recipe.StepByStepFragment"
+        android:label="Mode pas-à-pas"
+        tools:layout="@layout/fragment_step_by_step">
+        <argument
+            android:name="recipe_id"
+            app:argType="string" />
+    </fragment>
+
     <action
         android:id="@+id/action_global_login"
         app:destination="@id/fragment_login" />
+
+    <action
+        android:id="@+id/action_recipeDetailFragment_to_stepByStepFragment"
+        app:destination="@id/fragment_step_by_step"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
 </navigation>

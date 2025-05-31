@@ -3,7 +3,7 @@ package fr.tomgimat.cooksmart.data.firebase.firestore;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.tomgimat.cooksmart.ui.adapter.RecipeDisplayable;
+import fr.tomgimat.cooksmart.ui.RecipeDisplayable;
 
 public class FirestoreRecipe implements RecipeDisplayable {
     public String id;
@@ -23,6 +23,8 @@ public class FirestoreRecipe implements RecipeDisplayable {
     public boolean isLowSalt;
     public boolean isLowSugar;
     public boolean isPescetarian;
+
+    public boolean isHalal;
 
     public List<String> ingredients;
     public List<String> measures;
@@ -55,6 +57,7 @@ public class FirestoreRecipe implements RecipeDisplayable {
         recipe.isLowSalt = doc.getBoolean("isLowSalt") != null && doc.getBoolean("isLowSalt");
         recipe.isLowSugar = doc.getBoolean("isLowSugar") != null && doc.getBoolean("isLowSugar");
         recipe.isPescetarian = doc.getBoolean("isPescetarian") != null && doc.getBoolean("isPescetarian");
+        recipe.isHalal = doc.getBoolean("isHalal") != null && doc.getBoolean("isHalal");
 
         recipe.ingredients = new ArrayList<>();
         recipe.measures = new ArrayList<>();

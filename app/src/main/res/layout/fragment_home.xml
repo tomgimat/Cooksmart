@@ -18,91 +18,113 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
+                <!-- Section des recettes suggérées -->
                 <TextView
                     android:id="@+id/textViewWelcomeHome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="22dp"
-                    android:text="@string/welcome_to_cooksmart"
-                    android:textSize="24sp"
-                    android:textColor="@color/colorBlueBase"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"/>
-
-                <TextView
-                    android:id="@+id/textViewSuggest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/suggestions_for_you"
-                    android:textSize="20sp"/>
+                    android:layout_marginTop="16dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMeals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:paddingStart="4dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingEnd="4dp"/>
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
 
+                <!-- Section des recettes aléatoires -->
                 <TextView
-                    android:id="@+id/textViewRandomMeals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
                     android:text="@string/random_meals"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRandomMeals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:paddingStart="4dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingEnd="4dp"/>
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
 
+                <!-- Section des recettes compatibles -->
                 <TextView
-                    android:id="@+id/textViewVideos"
+                    android:id="@+id/textCompatibleRecipes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/compatible_recipes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCompatibleRecipes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:visibility="gone" />
+
+                <!-- Section des vidéos -->
+                <TextView
+                    android:id="@+id/textVideosToDiscover"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:text="@string/videos_to_discover"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvVideos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="280dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp" />
+
+                <TextView
+                    android:id="@+id/textViewAuthPrompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/sign_up_or_log_in_for_complete_access"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/rvVideos"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </LinearLayout>
-
         </androidx.core.widget.NestedScrollView>
 
+        <!-- FAB pour scanner -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabScanIngredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="80dp"
+            android:layout_margin="16dp"
             android:contentDescription="@string/scan_ingredient"
             app:srcCompat="@drawable/photo_camera_24px"
             app:tint="@android:color/white" />

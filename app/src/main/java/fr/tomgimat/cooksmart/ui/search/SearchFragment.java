@@ -13,14 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 
 import fr.tomgimat.cooksmart.R;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.databinding.FragmentSearchBinding;
-import fr.tomgimat.cooksmart.ui.adapter.RecipeImageAdapter;
+import fr.tomgimat.cooksmart.ui.home.RecipeImageAdapter;
 
 public class SearchFragment extends Fragment {
 
@@ -82,6 +81,30 @@ public class SearchFragment extends Fragment {
         binding.chipLactoseFree.setOnCheckedChangeListener((btn, checked) -> {
             Filters f = viewModel.getFilters();
             f.lactoseFree = checked ? true : null;
+            viewModel.setFilters(f);
+        });
+
+        binding.chipLowSalt.setOnCheckedChangeListener((btn, checked) -> {
+            Filters f = viewModel.getFilters();
+            f.lowSalt = checked ? true : null;
+            viewModel.setFilters(f);
+        });
+
+        binding.chipLowSugar.setOnCheckedChangeListener((btn, checked) -> {
+            Filters f = viewModel.getFilters();
+            f.lowSugar = checked ? true : null;
+            viewModel.setFilters(f);
+        });
+
+        binding.chipPescetarian.setOnCheckedChangeListener((btn, checked) -> {
+            Filters f = viewModel.getFilters();
+            f.pescetarian = checked ? true : null;
+            viewModel.setFilters(f);
+        });
+
+        binding.chipHalal.setOnCheckedChangeListener((btn, checked) -> {
+            Filters f = viewModel.getFilters();
+            f.halal = checked ? true : null;
             viewModel.setFilters(f);
         });
 

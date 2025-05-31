@@ -1,183 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.recipe.RecipeDetailFragment"
     android:paddingBottom="72dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Barre de chargement -->
-        <FrameLayout
-            android:id="@+id/loadingOverlay"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:paddingTop="80dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ProgressBar
-                android:id="@+id/progressBarCenter"
-                style="?android:attr/progressBarStyleLarge"
-                android:indeterminateTint="@color/textAccent"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_gravity="center"
-                android:visibility="visible"/>
-        </FrameLayout>
+            <!-- En-tête de la recette avec boutons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <!-- Titre et étoiles -->
         <TextView
             android:id="@+id/textRecipeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone"
-            android:text=""
-            android:textColor="@color/colorTextViewField"
-            android:textSize="26sp"
+                    android:layout_weight="1"
+                    android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnSaveRecipe"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                    android:visibility="gone" />
 
-        <ImageButton
-            android:id="@+id/btnSaveRecipe"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/save_recipe"
-            android:src="@drawable/bookmark_24px"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textRecipeTitle"
-            app:layout_constraintBottom_toBottomOf="@+id/textRecipeTitle" />
+                <ImageButton
+                    android:id="@+id/btnSaveRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/bookmark_24px"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-        <!-- RatingBar -->
+            <!-- Bouton step-by-step et notation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnStepByStep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_step_by_step_recipe"
+                    android:textColor="@color/textPrimary"
+                    android:backgroundTint="@color/cardStepBg"
+                    app:icon="@drawable/ic_play_circle"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
         <RatingBar
             android:id="@+id/ratingBarRecipe"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+                        style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:numStars="5"
-            android:visibility="gone"
-            android:stepSize="1.0"
-            app:layout_constraintEnd_toEndOf="@+id/textRecipeTitle"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textRecipeTitle" />
+                        android:visibility="gone" />
 
         <TextView
             android:id="@+id/textNbRatings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="17 notes"
+                        android:layout_marginTop="4dp"
             android:textColor="@color/textSecondary"
-            android:visibility="gone"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="@+id/ratingBarRecipe"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/ratingBarRecipe"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBarRecipe" />
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
 
-        <!-- Durée / bouton pas-à-pas -->
         <TextView
             android:id="@+id/textRecipeDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="@string/estimated_time"
-            android:textColor="@color/textSecondary"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textNbRatings" />
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btnStepByStep"
-            style="@style/Widget.Cooksmart.StepButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="@string/start_step_by_step_recipe"
-            app:layout_constraintStart_toStartOf="@+id/textRecipeTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textRecipeDuration" />
-
-
-        <!-- Ingrédients -->
+            <!-- Liste des ingrédients -->
         <TextView
             android:id="@+id/textIngredientsLabel"
-            android:layout_width="wrap_content"
+                android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="40dp"
-            android:text="Ingrédients"
-            android:visibility="gone"
-            android:textColor="@color/textAccent"
-            android:textSize="17sp"
+                android:layout_marginTop="24dp"
+                android:text="@string/recipe_ingredients"
+                android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnStepByStep" />
+                android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIngredients"
-            android:layout_width="0dp"
+                android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
             android:nestedScrollingEnabled="false"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textIngredientsLabel" />
+                android:visibility="gone" />
 
-
-        <!-- Section description -->
+            <!-- Instructions -->
         <TextView
             android:id="@+id/textRecipeInfoLabel"
-            android:layout_width="wrap_content"
+                android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="40dp"
+                android:layout_marginTop="24dp"
             android:text="@string/informations_sur_la_recette"
-            android:visibility="gone"
-            android:textColor="@color/textAccent"
-            android:textSize="17sp"
+                android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvIngredients" />
+                android:visibility="gone" />
 
         <TextView
             android:id="@+id/textRecipeDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:textColor="@color/textPrimary"
-            android:visibility="gone"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textRecipeInfoLabel"
-            app:layout_constraintVertical_bias="1.0" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <!-- Section des ingrédients manquants -->
+            <TextView
+                android:id="@+id/textMissingIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/missing_ingredients"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textMissingIngredientsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Overlay de chargement -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+</FrameLayout>

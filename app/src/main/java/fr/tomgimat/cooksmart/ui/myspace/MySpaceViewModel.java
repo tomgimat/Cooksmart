@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * Inutile en l'état
+ */
 public class MySpaceViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.fragment_home, R.id.fragment_search, R.id.fragment_my_space)
+                R.id.fragment_home, R.id.fragment_search, R.id.fragment_my_space, R.id.fragment_profile)
                 .build();
 
         //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -73,6 +73,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        // Ajouter un listener pour intercepter la navigation vers MySpaceFragment si l'utilisateur n'est pas connecté
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.fragment_my_space) {
+                if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    // Rediriger vers AuthActivity si l'utilisateur n'est pas connecté
+                    startActivity(new Intent(MainActivity.this, AuthActivity.class));
+                    // Empêcher la navigation vers MySpaceFragment
+                    controller.popBackStack(destination.getId(), true);
+                }
+            }
+        });
 
     }
 

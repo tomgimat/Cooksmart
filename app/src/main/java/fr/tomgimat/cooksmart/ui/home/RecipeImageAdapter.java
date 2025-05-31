@@ -1,4 +1,4 @@
-package fr.tomgimat.cooksmart.ui.adapter;
+package fr.tomgimat.cooksmart.ui.home;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.tomgimat.cooksmart.R;
+import fr.tomgimat.cooksmart.ui.RecipeDisplayable;
 
 public class RecipeImageAdapter<T extends RecipeDisplayable>
         extends RecyclerView.Adapter<RecipeImageAdapter.ViewHolder> {

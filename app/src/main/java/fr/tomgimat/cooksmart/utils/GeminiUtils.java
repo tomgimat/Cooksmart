@@ -9,18 +9,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class GeminiUtils {
     private static final String TAG = "GeminiUtils";
-    private static final String GEMINI_API_KEY = "AIzaSyA5wNox1AL78DwLYs0Pfsa7bzOtxu46h8k";
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
+    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    private static final String API_KEY = "AIzaSyA5wNox1AL78DwLYs0Pfsa7bzOtxu46h8k";
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
 
     /**
      * Appelle Gemini pour estimer la durée totale (en minutes) à partir d'instructions textuelles.
@@ -40,7 +51,7 @@ public class GeminiUtils {
 
         RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
         Request request = new Request.Builder()
-                .url(GEMINI_API_URL)
+                .url(GEMINI_API_URL + "?key=" + API_KEY)
                 .post(body)
                 .build();
 
@@ -97,7 +108,7 @@ public class GeminiUtils {
             // Envoyer la requête
             RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
             Request request = new Request.Builder()
-                    .url(GEMINI_API_URL)
+                    .url(GEMINI_API_URL + "?key=" + API_KEY)
                     .post(body)
                     .build();
 
@@ -106,6 +117,79 @@ public class GeminiUtils {
         } catch (JSONException e) {
             Log.e(TAG, "Erreur lors de la préparation de la requête Gemini", e);
         }
+    }
+
+    public static void extractStepsFromInstructions(String instructions, Callback callback) throws JSONException {
+        String prompt = "Décomposez ces instructions de recette en étapes individuelles claires et concises. " +
+                "Chaque étape doit être une action spécifique. " +
+                "Si une étape contient une durée (par exemple 'cuire pendant 10 minutes'), " +
+                "incluez-la dans l'étape. " +
+                "Retournez uniquement un tableau JSON d'étapes, sans autre texte. Exemple de structure à respecter dans la réponse : [\n" +
+                "    \"Faire bouillir de l'eau dans une casserole.\",\n" +
+                "    \"Ajouter les pâtes et cuire pendant 10 minutes.\",\n" +
+                "    \"Égoutter les pâtes.\",\n" +
+                "    \"Préparer la sauce dans une poêle.\",\n" +
+                "    \"Mélanger les pâtes à la sauce.\"\n" +
+                "]\n\n" +
+                "Voici les instructions : " + instructions;
+
+        JSONObject requestBody = new JSONObject();
+        JSONObject contents = new JSONObject();
+        JSONArray parts = new JSONArray();
+        JSONObject part = new JSONObject();
+        part.put("text", prompt);
+        parts.put(part);
+        contents.put("parts", parts);
+        requestBody.put("contents", contents);
+
+        Request request = new Request.Builder()
+                .url(GEMINI_API_URL + "?key=" + API_KEY)
+                .post(RequestBody.create(requestBody.toString(), JSON))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "Erreur lors de l'appel à l'API Gemini", e);
+                callback.onFailure(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    callback.onFailure(call, new IOException("Erreur API: " + response.code()));
+                    return;
+                }
+
+                try {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+                    JSONArray candidates = jsonResponse.getJSONArray("candidates");
+                    if (candidates.length() > 0) {
+                        JSONObject candidate = candidates.getJSONObject(0);
+                        JSONObject content = candidate.getJSONObject("content");
+                        JSONArray parts = content.getJSONArray("parts");
+                        if (parts.length() > 0) {
+                            String text = parts.getJSONObject(0).getString("text");
+                            // Nettoyer la réponse pour obtenir uniquement le tableau JSON
+                            text = text.replaceAll("```json\\s*", "").replaceAll("\\s*```", "").trim();
+                            callback.onResponse(call, response.newBuilder()
+                                    .request(request)
+                                    .protocol(response.protocol())
+                                    .code(response.code())
+                                    .message(response.message())
+                                    .body(ResponseBody.create(text, JSON))
+                                    .build());
+                            return;
+                        }
+                    }
+                    callback.onFailure(call, new IOException("Format de réponse invalide"));
+                } catch (JSONException e) {
+                    Log.e(TAG, "Erreur lors du parsing de la réponse", e);
+                    callback.onFailure(call, new IOException("Erreur de parsing: " + e.getMessage()));
+                }
+            }
+        });
     }
 }
 

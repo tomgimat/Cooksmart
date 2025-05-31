@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
+    android:layout_margin="4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
@@ -12,7 +11,9 @@
         android:id="@+id/checkBoxIngredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="16sp" />
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
 </com.google.android.material.card.MaterialCardView>

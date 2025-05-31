@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.tomgimat.cooksmart.data.MealDbClient;
+import fr.tomgimat.cooksmart.data.mealdb.MealDbClient;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.data.mealdb.Meal;
 import fr.tomgimat.cooksmart.data.mealdb.MealDbApiResponse;
@@ -109,6 +109,7 @@ public class RecipeDetailViewModel extends ViewModel {
         recipe.isLowSalt = false;
         recipe.isLowSugar = false;
         recipe.isPescetarian = false;
+        recipe.isHalal = false;
         return recipe;
     }
 

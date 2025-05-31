@@ -1,4 +1,4 @@
-package fr.tomgimat.cooksmart.ui.adapter;
+package fr.tomgimat.cooksmart.ui.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

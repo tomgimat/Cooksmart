@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.tomgimat.cooksmart.ui.adapter.RecipeDisplayable;
+import fr.tomgimat.cooksmart.ui.RecipeDisplayable;
 
 public class Meal implements RecipeDisplayable {
     @SerializedName("idMeal")

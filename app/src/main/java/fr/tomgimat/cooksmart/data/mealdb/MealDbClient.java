@@ -1,6 +1,5 @@
-package fr.tomgimat.cooksmart.data;
+package fr.tomgimat.cooksmart.data.mealdb;
 
-import fr.tomgimat.cooksmart.data.mealdb.MealDbApi;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

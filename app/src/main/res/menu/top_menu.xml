@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/fragment_settings"
-        android:icon="@drawable/coffee_24px"
+        android:icon="@drawable/settings_24px"
         android:title="@string/settings_general"
         android:orderInCategory="90"
         app:showAsAction="ifRoom" />

@@ -1,4 +1,4 @@
-package fr.tomgimat.cooksmart.ui.adapter;
+package fr.tomgimat.cooksmart.ui;
 
 public interface RecipeDisplayable {
     String getName();

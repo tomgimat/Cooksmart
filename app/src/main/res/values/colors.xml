@@ -53,7 +53,7 @@
     <!-- Texte -->
     <color name="textPrimary">#2D2B27</color>
     <color name="textSecondary">#7D766B</color>
-    <color name="textAccent">#755BE6</color>
+    <color name="textAccent">#7B63E6</color>
     <color name="textDanger">#D45D5D</color>
 
     <!-- Cartes, surfaces -->

@@ -29,11 +29,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/no_owned_ingredients"
-            android:textAlignment="center"
+        android:textAlignment="center"
             android:visibility="gone"
             android:layout_marginBottom="16dp"/>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,26 +44,42 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/ingredients_card_title"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_ingredients"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/ingredients_card_description"
+                        android:textColor="@color/textSecondary" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnResetIngredients"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/ingredients_card_description"
-                    android:textSize="14sp" />
-
+                    android:text="@string/reset_ingredients_list"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/textDanger"
+                    android:visibility="gone" />
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

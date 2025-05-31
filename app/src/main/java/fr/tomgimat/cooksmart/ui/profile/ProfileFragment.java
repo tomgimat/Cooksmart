@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,13 +39,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import fr.tomgimat.cooksmart.MainActivity;
 import fr.tomgimat.cooksmart.R;
-import fr.tomgimat.cooksmart.data.DietaryPreference;
+import fr.tomgimat.cooksmart.data.model.DietaryPreference;
 import fr.tomgimat.cooksmart.data.firebase.firestore.FirestoreRecipe;
 import fr.tomgimat.cooksmart.databinding.FragmentProfileBinding;
+import fr.tomgimat.cooksmart.ui.home.HomeViewModel;
 
 public class ProfileFragment extends Fragment {
 
@@ -158,11 +159,15 @@ public class ProfileFragment extends Fragment {
 
             userProfile
                     .set(Collections.singletonMap("preferences", prefsToSave), SetOptions.merge())
-                    .addOnSuccessListener(a ->
-                            Toast.makeText(getContext(), R.string.prefs_saved, Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(a -> {
+                            Toast.makeText(getContext(), R.string.prefs_saved, Toast.LENGTH_SHORT).show();
+                            HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+                            homeViewModel.updateSuggestions();})
                     .addOnFailureListener(e ->
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show());
+
         });
+
 
 
         binding.btnLogout.setOnClickListener(v -> signOut());
@@ -255,7 +260,7 @@ public class ProfileFragment extends Fragment {
         Tasks.whenAll(tasks)
             .addOnSuccessListener(aVoid -> {
                 List<FirestoreRecipe> recipes = new ArrayList<>();
-                
+
                 for (Task<DocumentSnapshot> task : tasks) {
                     DocumentSnapshot doc = task.getResult();
                     if (doc != null && doc.exists()) {
@@ -265,7 +270,7 @@ public class ProfileFragment extends Fragment {
                         Log.w("ProfileFragment", "Document non trouvé ou null");
                     }
                 }
-                
+
                 Log.d("ProfileFragment", "Nombre total de recettes chargées: " + recipes.size());
                 savedRecipesAdapter.setRecipes(recipes);
             })
@@ -301,7 +306,7 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             FirestoreRecipe recipe = recipes.get(position);
-            
+
             holder.recipeTitle.setText(recipe.name);
             holder.recipeDescription.setText(recipe.area + " • " + recipe.category + " • " +
                     (recipe.duration != 0 ? recipe.duration + " min" : getString(R.string.unknown_duration)));

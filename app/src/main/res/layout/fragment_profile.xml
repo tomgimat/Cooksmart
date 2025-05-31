@@ -81,7 +81,7 @@
                     android:id="@+id/cbLowSalt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Peu salé" />
+                    android:text="@string/low_salt" />
 
                 <CheckBox
                     android:id="@+id/cbGlutenFree"
@@ -113,6 +113,11 @@
                     android:layout_height="match_parent"
                     android:text="@string/pescetarian" />
 
+                <CheckBox
+                    android:id="@+id/cbHalal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/halal" />
 
                 <Button
                     android:id="@+id/btnSavePrefs"
