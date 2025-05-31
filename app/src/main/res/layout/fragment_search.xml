@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
-    android:padding="16dp">
+    android:padding="8dp"
+    android:paddingBottom="96dp">
 
     <!-- Barre de recherche -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="4dp"
         android:hint="@string/search_recipe_hint">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -27,16 +28,18 @@
         android:id="@+id/chipGroupFilters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginVertical="4dp"
         app:singleLine="false"
-        app:singleSelection="false">
+        app:singleSelection="false"
+        app:chipSpacingHorizontal="4dp"
+        app:chipSpacingVertical="4dp">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipVegetarian"
             style="@style/Widget.MaterialComponents.Chip.Filter"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/vegetarian" />
 
         <com.google.android.material.chip.Chip
@@ -44,6 +47,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/vegan" />
 
         <com.google.android.material.chip.Chip
@@ -51,6 +55,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/gluten_free" />
 
         <com.google.android.material.chip.Chip
@@ -58,6 +63,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/lactose_free" />
 
         <com.google.android.material.chip.Chip
@@ -65,6 +71,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/low_salt" />
 
         <com.google.android.material.chip.Chip
@@ -72,6 +79,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/low_sugar" />
 
         <com.google.android.material.chip.Chip
@@ -79,6 +87,7 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/pescetarian" />
 
         <com.google.android.material.chip.Chip
@@ -86,53 +95,74 @@
             style="@style/Widget.MaterialComponents.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/halal" />
 
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Filtres avancés (slider durée, nombre d'ingrédients) -->
-    <com.google.android.material.slider.Slider
-        android:id="@+id/sliderDuration"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:stepSize="5"
-        android:value="60"
-        android:valueFrom="5"
-        android:valueTo="300" />
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
 
-    <TextView
-        android:id="@+id/textDurationFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Temps max: 45 min" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <com.google.android.material.slider.Slider
-        android:id="@+id/sliderIngredients"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:stepSize="1"
-        android:value="20"
-        android:valueFrom="1"
-        android:valueTo="20" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/sliderDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:stepSize="5"
+                android:value="60"
+                android:valueFrom="5"
+                android:valueTo="300" />
 
-    <TextView
-        android:id="@+id/textNbIngredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Max ingrédients: 8" />
+            <TextView
+                android:id="@+id/textDurationFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="Temps max: 45 min" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/sliderIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:stepSize="1"
+                android:value="20"
+                android:valueFrom="1"
+                android:valueTo="20" />
+
+            <TextView
+                android:id="@+id/textNbIngredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="Max ingrédients: 8" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- Résultats de recherche -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:paddingBottom="4dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
 </LinearLayout>

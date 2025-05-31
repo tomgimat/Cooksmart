@@ -37,18 +37,19 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar;
-        setSupportActionBar(toolbar);
+        // Configuration de la Toolbar
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); // Optionnel : cache le titre par défaut
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.fragment_home, R.id.fragment_search, R.id.fragment_my_space, R.id.fragment_profile)
                 .build();
 
-        //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        // Utiliser setupWithNavController au lieu de setupActionBarWithNavController
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
 
         bottomNavItemChangeListener(binding.bottomNavView, navController);

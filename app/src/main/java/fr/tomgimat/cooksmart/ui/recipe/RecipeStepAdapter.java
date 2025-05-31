@@ -56,6 +56,8 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.St
             float elevationPx = 2 * holder.itemView.getContext().getResources().getDisplayMetrics().density;
             holder.cardView.setCardElevation(elevationPx);
             holder.cardView.setBackgroundColor(holder.itemView.getContext().getColor(android.R.color.white));
+            holder.textStepNumber.setTextColor(holder.itemView.getContext().getColor(android.R.color.black));
+            holder.textStepInstruction.setTextColor(holder.itemView.getContext().getColor(android.R.color.black));
         }
     }
 

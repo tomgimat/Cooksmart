@@ -25,6 +25,7 @@ import okhttp3.ResponseBody;
 public class GeminiUtils {
     private static final String TAG = "GeminiUtils";
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    private static final String GEMINI_API_URL_SCAN = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
     private static final String API_KEY = "AIzaSyA5wNox1AL78DwLYs0Pfsa7bzOtxu46h8k";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final OkHttpClient client = new OkHttpClient.Builder()
@@ -68,15 +69,33 @@ public class GeminiUtils {
         try {
             OkHttpClient client = new OkHttpClient();
 
-            // Convertir le bitmap en base64
+            // Redimensionner l'image avant de l'envoyer
+            int originalWidth = bitmap.getWidth();
+            int originalHeight = bitmap.getHeight();
+            int maxDimension = 800; // Définir la dimension maximale souhaitée
+            float ratio = (float) originalWidth / originalHeight;
+            int newWidth;
+            int newHeight;
+
+            if (originalWidth > originalHeight) {
+                newWidth = maxDimension;
+                newHeight = (int) (newWidth / ratio);
+            } else {
+                newHeight = maxDimension;
+                newWidth = (int) (newHeight * ratio);
+            }
+
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+
+            // Convertir le bitmap redimensionné en base64
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
-            String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT | Base64.NO_WRAP);
 
             // Construire le prompt pour Gemini
             StringBuilder prompt = new StringBuilder();
-            prompt.append("Voici une photo d'un ingrédient alimentaire. Identifie l'ingrédient et réponds uniquement avec son nom en français, sans article, sans ponctuation et en minuscules. ");
+            prompt.append("Voici une photo d'un ingrédient alimentaire. Identifie l'ingrédient et réponds uniquement avec son nom en anglais, sans article, sans ponctuation et en minuscules. ");
             prompt.append("Voici la liste des ingrédients valides dans l'application : ");
             prompt.append(String.join(", ", ingredientsList));
             prompt.append(". Si l'ingrédient n'est pas dans cette liste, réponds 'non_trouve'.");
@@ -108,7 +127,7 @@ public class GeminiUtils {
             // Envoyer la requête
             RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
             Request request = new Request.Builder()
-                    .url(GEMINI_API_URL + "?key=" + API_KEY)
+                    .url(GEMINI_API_URL_SCAN + "?key=" + API_KEY)
                     .post(body)
                     .build();
 

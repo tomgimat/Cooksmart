@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="120dp">
+    android:paddingBottom="96dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSteps"
@@ -60,7 +60,7 @@
         android:id="@+id/layoutNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="34dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">

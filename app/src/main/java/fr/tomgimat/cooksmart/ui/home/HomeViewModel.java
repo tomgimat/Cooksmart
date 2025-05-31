@@ -259,27 +259,34 @@ public class HomeViewModel extends ViewModel {
      * @param image
      */
     public void scanIngredient(Bitmap image) {
+
         if (availableIngredients.isEmpty()) {
             scanResult.setValue("Erreur : Liste d'ingrédients non chargée");
+
             return;
         }
 
         isScanning.setValue(true);
+
         GeminiUtils.recognizeIngredient(image, availableIngredients, new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 Log.e(TAG, "Erreur lors de la reconnaissance d'ingrédient", e);
                 scanResult.postValue("Erreur de connexion");
                 isScanning.postValue(false);
+
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+
                 try {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
-                      JSONArray candidates = jsonResponse.getJSONArray("candidates");
-                    if (candidates.length() > 0) {
+
+                    JSONArray candidates = jsonResponse.optJSONArray("candidates");
+
+                    if (candidates != null && candidates.length() > 0) {
                         JSONObject candidate = candidates.getJSONObject(0);
                         JSONObject content = candidate.getJSONObject("content");
                         JSONArray parts = content.getJSONArray("parts");
@@ -297,6 +304,10 @@ public class HomeViewModel extends ViewModel {
                                 scanResult.postValue("Aucun ingrédient correspondant trouvé dans l'application");
                             }
                         }
+                    } else {
+                         // Gérer le cas où 'candidates' est absent ou vide
+                        Log.e(TAG, "Réponse de Gemini sans 'candidates' ou vide: " + responseBody);
+                        scanResult.postValue("Erreur: Impossible d'analyser la réponse de l'image.");
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Erreur lors du parsing de la réponse", e);
@@ -330,50 +341,63 @@ public class HomeViewModel extends ViewModel {
 
     /**
      * Ajoute un ingrédient à la liste des ingrédients de l'utilisateur
-     * @param ingredient
+     * @param ingredientNameNormalized Le nom normalisé de l'ingrédient à ajouter.
      */
-    private void addIngredientToUserSelection(String ingredient) {
+    private void addIngredientToUserSelection(String ingredientNameNormalized) {
         String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
+        // Utiliser le nom normalisé pour rechercher l'ingrédient dans la collection 'ingredients'
         db.collection("ingredients")
-            .whereEqualTo("name", ingredient)
+            .whereEqualTo("normalizedName", ingredientNameNormalized)
             .get()
             .addOnSuccessListener(queryDocumentSnapshots -> {
+                Log.d(TAG, "addIngredientToUserSelection: Recherche ingrédient par nom normalisé terminée.");
                 if (!queryDocumentSnapshots.isEmpty()) {
                     String ingredientId = queryDocumentSnapshots.getDocuments().get(0).getId();
-                    
+                    Log.d(TAG, "addIngredientToUserSelection: Ingrédient " + ingredientNameNormalized + " trouvé avec l'ID: " + ingredientId);
+
                     //add l'id à la liste des ingrédients de l'utilisateur
                     db.collection("user_ingredients")
                         .document(userId)
                         .get()
                         .addOnSuccessListener(document -> {
+
                             List<String> ingredientIds = new ArrayList<>();
                             if (document.exists()) {
                                 List<String> existingIds = (List<String>) document.get("ingredientIds");
                                 if (existingIds != null) {
                                     ingredientIds.addAll(existingIds);
                                 }
+                            } else {
+
                             }
 
                             if (!ingredientIds.contains(ingredientId)) {
                                 ingredientIds.add(ingredientId);
-                                
+
                                 //savela liste mise à jour
                                 db.collection("user_ingredients")
                                     .document(userId)
                                     .set(new UserIngredients(userId, ingredientIds))
                                     .addOnSuccessListener(aVoid -> {
-                                        Log.d(TAG, "Ingrédient ajouté avec succès");
+                                        Log.d(TAG, "addIngredientToUserSelection: Liste d'ingrédients utilisateur sauvegardée avec succès dans Firestore.");
                                     })
                                     .addOnFailureListener(e -> {
-                                        Log.e(TAG, "Erreur lors de l'ajout de l'ingrédient", e);
+                                        Log.e(TAG, "addIngredientToUserSelection: Erreur lors de la sauvegarde de la liste d'ingrédients utilisateur", e);
                                     });
+                            } else {
+                                Log.d(TAG, "addIngredientToUserSelection: L'ingrédient est déjà dans la liste de l'utilisateur.");
                             }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "addIngredientToUserSelection: Erreur lors de la récupération du document user_ingredients", e);
                         });
+                } else {
+                    Log.d(TAG, "addIngredientToUserSelection: Ingrédient " + ingredientNameNormalized + " non trouvé dans la collection 'ingredients' avec le nom normalisé.");
                 }
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Erreur lors de la recherche de l'ingrédient", e);
+                Log.e(TAG, "addIngredientToUserSelection: Erreur lors de la recherche de l'ingrédient par nom normalisé", e);
             });
     }
 

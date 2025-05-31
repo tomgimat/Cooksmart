@@ -30,16 +30,16 @@ public class RecipeStep {
      * Extrait la durée en secondes d'une instruction
      */
     private int extractDuration(String instruction) {
-        Pattern pattern = Pattern.compile("(\\d+)\\s*(min|minutes|h|heures|heure)");
-        Matcher matcher = pattern.matcher(instruction.toLowerCase());
-        
+        Pattern pattern = Pattern.compile("(\\d+)\\s*(\\Qmin\\E|\\Qminutes\\E|\\Qh\\E|\\Qheures\\E|\\Qheure\\E)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(instruction);
+
         if (matcher.find()) {
             int value = Integer.parseInt(matcher.group(1));
             String unit = matcher.group(2);
-            
-            if (unit.startsWith("h")) {
+
+            if (unit != null && unit.toLowerCase().startsWith("h")) {
                 return value * 3600;
-            } else {
+            } else if (unit != null && (unit.toLowerCase().startsWith("min") || unit.toLowerCase().equals("minutes"))) {
                 return value * 60;
             }
         }

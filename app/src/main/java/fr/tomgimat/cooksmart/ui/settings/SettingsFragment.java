@@ -29,7 +29,7 @@ public class SettingsFragment extends Fragment {
                 .get(SettingsViewModel.class);
 
         setupSwitches();
-        setupResetButton();
+//        setupResetButton();
         setupLanguageButton();
         observeSettings();
 
@@ -71,9 +71,9 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    private void setupResetButton() {
-        binding.btnResetSettings.setOnClickListener(v -> showResetConfirmationDialog());
-    }
+//    private void setupResetButton() {
+//        binding.btnResetSettings.setOnClickListener(v -> showResetConfirmationDialog());
+//    }
 
     private void setupLanguageButton() {
         binding.buttonChangeLanguage.setOnClickListener(v -> {
@@ -93,17 +93,17 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    private void showResetConfirmationDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.settings_reset)
-                .setMessage(R.string.settings_reset_confirm)
-                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                    viewModel.resetSettings();
-                    Toast.makeText(requireContext(), R.string.settings_reset_success, Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .show();
-    }
+//    private void showResetConfirmationDialog() {
+//        new AlertDialog.Builder(requireContext())
+//                .setTitle(R.string.settings_reset)
+//                .setMessage(R.string.settings_reset_confirm)
+//                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+//                    viewModel.resetSettings();
+//                    Toast.makeText(requireContext(), R.string.settings_reset_success, Toast.LENGTH_SHORT).show();
+//                })
+//                .setNegativeButton(android.R.string.no, null)
+//                .show();
+//    }
 
     private void observeSettings() {
         viewModel.getNotifications().observe(getViewLifecycleOwner(), isChecked ->
