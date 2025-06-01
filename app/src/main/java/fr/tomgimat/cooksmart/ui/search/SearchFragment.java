@@ -126,7 +126,7 @@ public class SearchFragment extends Fragment {
 
         // Observe les résultats filtrés
         viewModel.getFilteredRecipes().observe(getViewLifecycleOwner(), recipes -> {
-            adapter.setRecipes(recipes); // Ajoute une méthode dans ton adapter pour refresh la liste
+            adapter.setRecipes(recipes);
         });
 
         binding.rvSearchResults.setAdapter(adapter);

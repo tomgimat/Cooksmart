@@ -48,17 +48,11 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
 
-        // Utiliser setupWithNavController au lieu de setupActionBarWithNavController
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
 
         bottomNavItemChangeListener(binding.bottomNavView, navController);
-//        analytics = FirebaseAnalytics.getInstance(this);
 
-//        FirebaseFirestore.getInstance().terminate()
-//                .addOnSuccessListener(unused ->
-//                        FirebaseFirestore.getInstance().clearPersistence()
-//                );
 
         FirebaseFirestore.getInstance().setFirestoreSettings(
                 new FirebaseFirestoreSettings.Builder()
@@ -75,13 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        // Ajouter un listener pour intercepter la navigation vers MySpaceFragment si l'utilisateur n'est pas connecté
+        // Ajout d'un listener pour intercepter la navigation vers MySpaceFragment si l'utilisateur n'est pas connecté
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.fragment_my_space) {
                 if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    // Rediriger vers AuthActivity si l'utilisateur n'est pas connecté
+                    // Redirection vers AuthActivity si l'utilisateur n'est pas connecté
                     startActivity(new Intent(MainActivity.this, AuthActivity.class));
-                    // Empêcher la navigation vers MySpaceFragment
                     controller.popBackStack(destination.getId(), true);
                 }
             }
@@ -111,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Listener pour les items du top menu (login, settings)
+     * @param item The menu item that was selected.
+     *
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.fragment_login) {

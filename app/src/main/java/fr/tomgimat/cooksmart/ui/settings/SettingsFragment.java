@@ -29,13 +29,16 @@ public class SettingsFragment extends Fragment {
                 .get(SettingsViewModel.class);
 
         setupSwitches();
-//        setupResetButton();
         setupLanguageButton();
         observeSettings();
 
         return binding.getRoot();
     }
 
+    /**
+     * Setup des boutons de préférences même si certains ne fonctionnent pas en l'état
+     * TODO
+     */
     private void setupSwitches() {
         // Préférences Générales
         binding.switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -71,9 +74,6 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-//    private void setupResetButton() {
-//        binding.btnResetSettings.setOnClickListener(v -> showResetConfirmationDialog());
-//    }
 
     private void setupLanguageButton() {
         binding.buttonChangeLanguage.setOnClickListener(v -> {
@@ -93,18 +93,9 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-//    private void showResetConfirmationDialog() {
-//        new AlertDialog.Builder(requireContext())
-//                .setTitle(R.string.settings_reset)
-//                .setMessage(R.string.settings_reset_confirm)
-//                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-//                    viewModel.resetSettings();
-//                    Toast.makeText(requireContext(), R.string.settings_reset_success, Toast.LENGTH_SHORT).show();
-//                })
-//                .setNegativeButton(android.R.string.no, null)
-//                .show();
-//    }
-
+    /**
+     * Observe les changements des préférences et met à jour les boutons en conséquence
+     */
     private void observeSettings() {
         viewModel.getNotifications().observe(getViewLifecycleOwner(), isChecked ->
                 binding.switchNotifications.setChecked(isChecked != null && isChecked));
@@ -124,17 +115,14 @@ public class SettingsFragment extends Fragment {
 
     private void updateNotifications(boolean enabled) {
         // TODO: Implémenter la gestion des notifications
-        // Cela nécessitera probablement de configurer les canaux de notification
     }
 
     private void updateOfflineMode(boolean enabled) {
         // TODO: Implémenter la gestion du mode hors-ligne
-        // Cela nécessitera probablement de gérer le cache des données
     }
 
     private void clearSearchHistory() {
         // TODO: Implémenter la suppression de l'historique de recherche
-        // Cela nécessitera probablement de nettoyer la base de données locale
     }
 
     @Override
@@ -142,4 +130,22 @@ public class SettingsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    ////////////////////PARTIE RESET DES PARAMETRES/////////////////////
+
+//    private void setupResetButton() {
+//        binding.btnResetSettings.setOnClickListener(v -> showResetConfirmationDialog());
+//    }
+
+//    private void showResetConfirmationDialog() {
+//        new AlertDialog.Builder(requireContext())
+//                .setTitle(R.string.settings_reset)
+//                .setMessage(R.string.settings_reset_confirm)
+//                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+//                    viewModel.resetSettings();
+//                    Toast.makeText(requireContext(), R.string.settings_reset_success, Toast.LENGTH_SHORT).show();
+//                })
+//                .setNegativeButton(android.R.string.no, null)
+//                .show();
+//    }
 } 

@@ -20,6 +20,9 @@ public class SettingsViewModel extends ViewModel {
         loadSettings();
     }
 
+    /**
+     * Charge les préférences de l'application depuis les SharedPreferences.
+     */
     private void loadSettings() {
         notifications.setValue(preferences.getBoolean("notifications", true));
         offlineMode.setValue(preferences.getBoolean("offline_mode", false));
@@ -28,6 +31,10 @@ public class SettingsViewModel extends ViewModel {
         smartSuggestions.setValue(preferences.getBoolean("smart_suggestions", true));
     }
 
+    /**
+     * Enregistre les préférences de l'application dans les SharedPreferences.
+     * TODO les modes ne marchent pas
+     */
     public void saveSettings() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("notifications", notifications.getValue() != null && notifications.getValue());
@@ -38,6 +45,9 @@ public class SettingsViewModel extends ViewModel {
         editor.apply();
     }
 
+    /**
+     * Réinitialise les préférences de l'application. Non fonctionnel
+     */
     public void resetSettings() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();

@@ -33,6 +33,9 @@ public class SearchViewModel extends ViewModel {
         fetchAllRecipes();
     }
 
+    /**
+     * Charge toutes les recettes depuis Firestore et les stocke dans allRecipes
+     */
     private void fetchAllRecipes() {
         FirebaseFirestore.getInstance().collection("recipes")
                 .get()
@@ -45,6 +48,9 @@ public class SearchViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Met à jour les résultats filtrés en fonction de la recherche et des filtres actuels
+     */
     private void refreshResults() {
         List<FirestoreRecipe> all = allRecipes.getValue() != null ? allRecipes.getValue() : new ArrayList<>();
         String query = searchQuery.getValue() != null ? searchQuery.getValue().toLowerCase() : "";

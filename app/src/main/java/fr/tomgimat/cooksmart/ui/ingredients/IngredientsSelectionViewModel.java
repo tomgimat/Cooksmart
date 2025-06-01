@@ -32,38 +32,6 @@ public class IngredientsSelectionViewModel extends ViewModel {
         loadUserIngredients();
     }
 
-
-//    private void extractAndSaveIngredients() {
-//        db.collection("recipes")
-//            .get()
-//            .addOnSuccessListener(queryDocumentSnapshots -> {
-//                Set<String> uniqueIngredients = new HashSet<>();
-//
-//                // Extraire tous les ingrédients uniques
-//                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                    FirestoreRecipe recipe = FirestoreRecipe.fromFirestoreDoc(document);
-//                    if (recipe.getIngredients() != null) {
-//                        uniqueIngredients.addAll(recipe.getIngredients());
-//                    }
-//                }
-//
-//                // Créer et sauvegarder les ingrédients
-//                for (String ingredientName : uniqueIngredients) {
-//                    if (ingredientName != null && !ingredientName.trim().isEmpty()) {
-//                        Ingredient ingredient = new Ingredient(null, ingredientName.trim());
-//                        db.collection("ingredients")
-//                            .add(ingredient)
-//                            .addOnSuccessListener(documentReference -> {
-//                                ingredient.setId(documentReference.getId());
-//                                db.collection("ingredients")
-//                                    .document(documentReference.getId())
-//                                    .set(ingredient);
-//                            });
-//                    }
-//                }
-//            });
-//    }
-
     public void loadUserIngredients() {
         String userId = auth.getCurrentUser().getUid();
         db.collection("user_ingredients")
@@ -82,6 +50,10 @@ public class IngredientsSelectionViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Sauvegarde les ingrédients sélectionnés dans Firestore
+     * @param selectedIngredients
+     */
     public void saveUserIngredients(List<Ingredient> selectedIngredients) {
         String userId = auth.getCurrentUser().getUid();
         List<String> newIngredientIds = selectedIngredients.stream()
@@ -164,6 +136,10 @@ public class IngredientsSelectionViewModel extends ViewModel {
         filteredIngredients.setValue(filtered);
     }
 
+    /**
+     * Toggle la sélection d'un ingrédient puis met à jour la liste filtrée
+     * @param ingredient
+     */
     public void toggleIngredientSelection(Ingredient ingredient) {
         if (selectedIngredientIds.contains(ingredient.getId())) {
             selectedIngredientIds.remove(ingredient.getId());
@@ -174,6 +150,9 @@ public class IngredientsSelectionViewModel extends ViewModel {
         updateFilteredList();
     }
 
+    /**
+     * Met à jour la liste filtrée en fonction des sélections
+     */
     private void updateFilteredList() {
         List<Ingredient> currentList = filteredIngredients.getValue();
         if (currentList != null) {
@@ -192,6 +171,10 @@ public class IngredientsSelectionViewModel extends ViewModel {
         return ownedIngredients;
     }
 
+    /**
+     * Supprime un ingrédient possédé par l'utilisateur
+     * @param ingredient
+     */
     public void removeIngredient(Ingredient ingredient) {
         String userId = auth.getCurrentUser().getUid();
         db.collection("user_ingredients")

@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ public class IngredientsSelectionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentIngredientsSelectionBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(IngredientsSelectionViewModel.class);
-        
+
         setupRecyclerView();
         setupSearchBar();
         setupValidationButton();
         observeIngredients();
-        
+
         return binding.getRoot();
     }
 
@@ -59,35 +59,35 @@ public class IngredientsSelectionFragment extends Fragment {
         });
     }
 
+    /**
+     * Configure le bouton de validation pour sauvegarder les ingrédients sélectionnés
+     */
     private void setupValidationButton() {
         binding.buttonValidateIngredientSelection.setOnClickListener(v -> {
-            // Désactiver le bouton et afficher le chargement
             binding.buttonValidateIngredientSelection.setEnabled(false);
             binding.progressBar.setVisibility(View.VISIBLE);
-            
-            // Récupérer la liste actuelle des ingrédients
             List<Ingredient> currentIngredients = adapter.getCurrentList();
             if (currentIngredients != null) {
-                // Sauvegarder les ingrédients sélectionnés
                 viewModel.saveUserIngredients(currentIngredients);
-                
-                // Afficher un message de confirmation
                 Toast.makeText(getContext(), R.string.ingredients_saved, Toast.LENGTH_SHORT).show();
-                
-                // Retourner à l'écran précédent
                 Navigation.findNavController(v).navigateUp();
             }
         });
     }
 
+    /**
+     * Observe les ingrédients de la liste filteredIngredients et les ingrédients possédés pour les mettre à jour
+     */
     private void observeIngredients() {
+        // Observe les ingrédients filtrés pour les mettre à jour
         viewModel.getFilteredIngredients().observe(getViewLifecycleOwner(), ingredients -> {
             adapter.submitList(ingredients);
         });
 
+        // Observe les ingrédients possédés pour les mettre à jour
         viewModel.getOwnedIngredients().observe(getViewLifecycleOwner(), ownedIngredients -> {
             if (ownedIngredients != null) {
-                // Mettre à jour les sélections pour les ingrédients possédés
+
                 for (Ingredient ownedIngredient : ownedIngredients) {
                     viewModel.toggleIngredientSelection(ownedIngredient);
                 }

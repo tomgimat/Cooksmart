@@ -3,6 +3,9 @@ package fr.tomgimat.cooksmart.data.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Représente une étape d'une recette.
+ */
 public class RecipeStep {
     private String instruction;
     private int duration; // en secondes
@@ -28,8 +31,11 @@ public class RecipeStep {
 
     /**
      * Extrait la durée en secondes d'une instruction
+     * todo Non fonctionnel
      */
     private int extractDuration(String instruction) {
+        //todo le pattern n'est pas reconnu pour les différentes instructions disponibles dans les recettes
+        // jamais de match malgré de nombreux tests sur différentes recettes
         Pattern pattern = Pattern.compile("(\\d+)\\s*(\\Qmin\\E|\\Qminutes\\E|\\Qh\\E|\\Qheures\\E|\\Qheure\\E)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(instruction);
 
